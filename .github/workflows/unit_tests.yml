@@ -23,7 +23,7 @@ jobs:
         run: mvn --batch-mode -DskipTests package
 
       - name: Test
-        run: mvn clean test
+        run: mvn test
 
       - name: Report
         uses: dorny/test-reporter@v1
