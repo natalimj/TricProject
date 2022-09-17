@@ -3,11 +3,11 @@
 
 name: Build and deploy JAR app to Azure Web App - tric-project
 
-on:
-  push:
-    branches:
-      - master
-  workflow_dispatch:
+# on:
+#  push:
+#    branches:
+#      - master
+#  workflow_dispatch:
 
 jobs:
   build:
