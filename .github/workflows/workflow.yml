@@ -64,7 +64,6 @@ jobs:
           reporter: java-junit
 
   deploy:
-    if: ${{ never() }} # REMOVE THIS JUST FOR TESTING NOW
     runs-on: windows-latest
     needs: [build, test]
     environment:
