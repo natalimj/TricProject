@@ -23,8 +23,10 @@ jobs:
         run: mvn --batch-mode --fail-at-end test
 
       - name: Publish Test Report
-        if: ${{ always() }}
-        uses: scacap/action-surefire-report@v1
+        uses: mikepenz/action-junit-report@v1
+        with:
+          report_paths: '**/surefire-reports/TEST-*.xml'
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
   deploy:
     runs-on: windows-latest
