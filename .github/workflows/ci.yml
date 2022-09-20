@@ -27,11 +27,8 @@ jobs:
       - name: Test
         run: mvn --batch-mode -Dmaven.test.failure.ignore=true test
 
-      - name: Report
-        uses: dorny/test-reporter@v1
-        if: always()
+      - uses: actions/upload-artifact@v2  # upload test results
+        if: success() || failure()        # run this step even if previous step failed
         with:
-          name: Maven Tests
+          name: test-results
           path: target/surefire-reports/*.xml
-          reporter: java-junit
-          fail-on-error: true
