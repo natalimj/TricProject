@@ -7,6 +7,6 @@ class TricProjectApplicationTests {
 
     @Test
     void justAnExample() {
-        Assertions.fail();
+
     }
 }
