@@ -25,12 +25,6 @@ jobs:
       - name: Test
         run: mvn --batch-mode -Dmaven.test.failure.ignore=true test
 
-      - uses: actions/upload-artifact@v2  # upload test results
-        if: success() || failure()        # run this step even if previous step failed
-        with:
-          name: test-results
-          path: target/surefire-reports/*.xml
-
   report:
     if: ${{ always() }}
     needs: test
