@@ -1,0 +1,71 @@
+name: 'CI/CD'
+
+on:
+  push:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'microsoft'
+
+      - name: Build
+        run: mvn --batch-mode -DskipTests package
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test
+        run: mvn --batch-mode -Dmaven.test.failure.ignore=true test
+
+      - uses: actions/upload-artifact@v2  # upload test results
+        if: success() || failure()        # run this step even if previous step failed
+        with:
+          name: test-results
+          path: target/surefire-reports/*.xml
+
+  report:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: dorny/test-reporter@v1
+        with:
+          artifact: test-results
+          name: Test Report
+          path: '*.xml'
+          reporter: java-junit
+
+  deploy:
+    runs-on: windows-latest
+    needs: [build, test]
+    environment:
+      name: 'Production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v2
+        with:
+          name: java-app
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'tric-project'
+          slot-name: 'Production'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E6E8FEDB0E094955945B5B2743921F71 }}
+          package: '*.jar'
