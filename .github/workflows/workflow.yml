@@ -20,7 +20,7 @@ jobs:
           distribution: 'microsoft'
 
       - name: Build and Test
-        run: mvn --batch-mode --fail-at-end
+        run: mvn --batch-mode --fail-at-end test
 
       - name: Publish Test Report
         if: ${{ always() }}
