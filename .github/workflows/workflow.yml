@@ -59,12 +59,12 @@ jobs:
     steps:
       - uses: dorny/test-reporter@v1
         with:
-          artifact: test-results
           name: Test Report
-          path: '*.xml'
+          path: target/surefire-reports/*.xml
           reporter: java-junit
 
   deploy:
+    if: ${{ never() }} # REMOVE THIS JUST FOR TESTING NOW
     runs-on: windows-latest
     needs: [build, test]
     environment:
