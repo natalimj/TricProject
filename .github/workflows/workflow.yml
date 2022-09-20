@@ -28,13 +28,11 @@ jobs:
         if: ${{ always() }}
         uses: scacap/action-surefire-report@v1
 
-  deploy:
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
-    runs-on: windows-latest
+  build:
     needs: test
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+
+    runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v2
@@ -52,6 +50,16 @@ jobs:
         with:
           name: java-app
           path: '${{ github.workspace }}/target/*.jar'
+
+  deploy:
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+    runs-on: windows-latest
+    needs: build
+    environment:
+      name: 'Production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v2
         with:
