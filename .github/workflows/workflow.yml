@@ -10,6 +10,7 @@ on:
 
 jobs:
   test:
+    name: test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -29,6 +30,7 @@ jobs:
         uses: scacap/action-surefire-report@v1
 
   build:
+    name: build
     needs: test
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
 
@@ -52,6 +54,7 @@ jobs:
           path: '${{ github.workspace }}/target/*.jar'
 
   deploy:
+    name: deploy
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
     runs-on: windows-latest
     needs: build
