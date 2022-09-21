@@ -5,6 +5,7 @@ import tric.tricproject.Repository.PlayResultRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,8 +21,8 @@ public class PlayResultImpl implements PlayResultService {
     }
 
     @Override
-    public List<PlayResult> getPlayResultsByDate(Date date) {
-        return null; //TODO: implement getPlayResultsByDate
+    public List<PlayResult> getPlayResultsByDate(Timestamp date) {
+        return playResultRepository.findByDate(date);
     }
 
     @Override
@@ -35,5 +36,10 @@ public class PlayResultImpl implements PlayResultService {
 
         playResultRepository.saveAll(playResults);
 
+    }
+
+    @Override
+    public PlayResult addPlayResult(PlayResult playResult) {
+        return playResultRepository.save(playResult);
     }
 }

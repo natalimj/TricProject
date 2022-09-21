@@ -1,29 +1,23 @@
 package tric.tricproject.Controller;
 
-import tric.tricproject.Model.PlayResult;
-import tric.tricproject.Model.Vote;
-import tric.tricproject.Service.PlayResultService;
-import tric.tricproject.Service.UserService;
-import tric.tricproject.Service.VoteService;
-import tric.tricproject.Util.PlayResultExcelExporter;
-import tric.tricproject.Util.VoteExcelExporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
+import tric.tricproject.Model.Question;
+import tric.tricproject.Model.Result;
+import tric.tricproject.Service.PlayResultService;
+import tric.tricproject.Service.QuestionService;
+import tric.tricproject.Service.UserService;
+import tric.tricproject.Service.VoteService;
 
 @CrossOrigin(origins = {"http://localhost:3000"})
 @RestController
 @RequestMapping("/adminApi")
 public class AdminController {
-
     private final Logger log = LoggerFactory.getLogger(UserController.class);
     @Autowired
     UserService userService;
@@ -31,8 +25,15 @@ public class AdminController {
     VoteService voteService;
 
     @Autowired
+    QuestionService questionService;
+
+    @Autowired
     PlayResultService playResultService;
 
+    @Autowired
+    SimpMessagingTemplate template;
+
+    /*
     //do we need this?
     @GetMapping("/exportExcel2")
     public void exportVoteToExcel(HttpServletResponse response) throws IOException {
@@ -65,7 +66,7 @@ public class AdminController {
         log.info("Exporting an excel file : "+"play_results_" + currentDateTime + ".xlsx");
         excelExporter.export(response);
     }
-
+*/
     @PostMapping("/endSession")
     public void endSession() {
         playResultService.createPlayResults();
@@ -75,5 +76,79 @@ public class AdminController {
         voteService.deleteAllVotes();
 
         log.info("session ended...");
+    }
+    @GetMapping("/question")
+    public ResponseEntity<Question> getQuestion(@RequestParam("questionNumber") int questionNumber) {
+        try {
+            Question question = questionService.getQuestionByNumber(questionNumber);
+            if( question != null){
+                template.convertAndSend("/topic/question", question);
+                return new ResponseEntity<>(question, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            log.info("Internal Server Error - QuestionController/getQuestion",e);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/result")  //TODO: maybe it can be only a service method - call with timer?
+    public ResponseEntity<Result> getResult(@RequestParam("questionId") long questionId) {
+
+        try {
+            Result result = questionService.getResult(questionId);
+            template.convertAndSend("/topic/result",result);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Internal Server Error - QuestionController/getResult",e);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/addQuestion")
+    public ResponseEntity<Question> addQuestion(@RequestParam String question,@RequestParam String firstAnswer,@RequestParam String secondAnswer) {
+        try {
+            Question _question = questionService.addQuestion(question,firstAnswer,secondAnswer);
+            log.info("A new question has been added. Question Id:"+_question.getQuestionId());
+            return new ResponseEntity<>(_question, HttpStatus.CREATED);
+        } catch (Exception e) {
+            log.error("Internal Server Error - QuestionController/addQuestion",e);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/addQuestionV2")
+    public ResponseEntity<Question> addQuestion2(@RequestBody Question question) {
+        try {
+            Question _question = questionService.addQuestion(question);
+            log.info("A new question has been added. Question Id:"+_question.getQuestionId());
+            return new ResponseEntity<>(_question, HttpStatus.CREATED);
+        } catch (Exception e) {
+            log.error("Internal Server Error - QuestionController/addQuestion",e);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/editQuestion")
+    public ResponseEntity<Question> editQuestion(@RequestBody Question question) {
+        try {
+            Question _question = questionService.editQuestion(question);
+            return new ResponseEntity<>(_question, HttpStatus.CREATED);
+        } catch (Exception e) {
+            log.error("Internal Server Error - QuestionController/editQuestion",e);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    @DeleteMapping(value = "/deleteQuestion")
+    public ResponseEntity<Long> deleteQuestion(@RequestParam Long questionId) {
+        try {
+            questionService.deleteQuestionById(questionId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

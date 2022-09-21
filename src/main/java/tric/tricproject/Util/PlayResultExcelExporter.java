@@ -69,8 +69,8 @@ public class PlayResultExcelExporter {
 
             createCell(row, columnCount++, playResult.getDate().toString(), style);
             createCell(row, columnCount++, playResult.getQuestionNumber(), style);
-            createCell(row, columnCount++, playResult.getFirstAnswer(), style);
-            createCell(row, columnCount++, playResult.getSecondAnswer(), style);
+          //  createCell(row, columnCount++, playResult.getFirstAnswer(), style);
+          //  createCell(row, columnCount++, playResult.getSecondAnswer(), style);
         }
     }
     public void export(HttpServletResponse response) throws IOException {
