@@ -7,6 +7,6 @@ class TricProjectApplicationTests {
 
     @Test
     void test1() {
-        Assertions.assertTrue(true);
+        Assertions.assertTrue(false);
     }
 }
