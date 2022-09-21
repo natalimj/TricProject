@@ -8,20 +8,20 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private long userId;
 
     @Column(name = "username")
     private String username;
 
     @Column(name = "imagePath")
     private String imagePath;
-    public User(long id, String username) {
-        this.id = id;
+    public User(long userId, String username) {
+        this.userId = userId;
         this.username = username;
     }
 
-    public User(long id, String username, String imagePath) {
-        this.id = id;
+    public User(long userId, String username, String imagePath) {
+        this.userId = userId;
         this.username = username;
         this.imagePath = imagePath;
     }
@@ -34,12 +34,12 @@ public class User {
 
     }
 
-    public long getId() {
-        return id;
+    public long getUserId() {
+        return userId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
     public String getUsername() {
