@@ -2,7 +2,7 @@ package tric.tricproject.Model;
 
 public class Result {
 
-    private int questionNumber;
+    private Question question;
     private Answer firstAnswer;
     private Answer secondAnswer;
     private double firstAnswerRate;
@@ -11,14 +11,14 @@ public class Result {
     }
 
 
-    public Result(int questionNumber, double firstAnswerRate, double secondAnswerRate) {
-        this.questionNumber = questionNumber;
+    public Result(Question question, double firstAnswerRate, double secondAnswerRate) {
+        this.question = question;
         this.firstAnswerRate = firstAnswerRate;
         this.secondAnswerRate = secondAnswerRate;
     }
 
-    public Result(int questionNumber, Answer firstAnswer, Answer secondAnswer, double firstAnswerRate, double secondAnswerRate) {
-        this.questionNumber = questionNumber;
+    public Result(Question question, Answer firstAnswer, Answer secondAnswer, double firstAnswerRate, double secondAnswerRate) {
+        this.question = question;
         this.firstAnswer = firstAnswer;
         this.secondAnswer = secondAnswer;
         this.firstAnswerRate = firstAnswerRate;
@@ -57,12 +57,12 @@ public class Result {
         this.secondAnswerRate = secondAnswerRate;
     }
 
-    public int getQuestionNumber() {
-        return questionNumber;
+    public Question getQuestion() {
+        return question;
     }
 
-    public void setQuestionNumber(int questionNumber) {
-        this.questionNumber = questionNumber;
+    public void setQuestion(Question question) {
+        this.question = question;
     }
 }
 

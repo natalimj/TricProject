@@ -81,12 +81,14 @@ public class QuestionServiceImpl implements  QuestionService{
 
         List<Vote> votes = voteRepository.findAllByQuestionId(questionId);
         Result result = new Result();
-        result.setQuestionNumber(question.getQuestionNumber());
+        result.setQuestion(question);
         result.setFirstAnswer(answer1);
         result.setSecondAnswer(answer2);
         int firstAnswerNumber = (int) votes.stream().filter(v->v.getAnswerId() == answer1.getAnswerId()).count();
         int secondAnswerNumber = (int) votes.stream().filter(v->v.getAnswerId() == answer2.getAnswerId()).count();
 
+        System.out.println(firstAnswerNumber);
+        System.out.println(secondAnswerNumber);
         if(votes.size() != 0){
             result.setFirstAnswerRate((100*firstAnswerNumber)/votes.size());
             result.setSecondAnswerRate((100*secondAnswerNumber)/votes.size());
