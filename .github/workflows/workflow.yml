@@ -74,5 +74,5 @@ jobs:
         with:
           app-name: 'tricproject'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AzureAppService_PublishProfile_eeb64d420a254e528ae253a22289d906 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E6F5F07B5CB74475818545975BC68A33 }}
           package: '*.jar'
