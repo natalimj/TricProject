@@ -9,12 +9,15 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import tric.tricproject.Model.Question;
 import tric.tricproject.Model.Result;
+import tric.tricproject.Model.User;
 import tric.tricproject.Service.PlayResultService;
 import tric.tricproject.Service.QuestionService;
 import tric.tricproject.Service.UserService;
 import tric.tricproject.Service.VoteService;
 
-@CrossOrigin(origins = {"http://localhost:3000"})
+import java.util.List;
+
+@CrossOrigin
 @RestController
 @RequestMapping("/adminApi")
 public class AdminController {
@@ -151,4 +154,7 @@ public class AdminController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/questions")
+    public List<Question> getAllQuestions() {  return questionService.getAllQuestions(); }
 }
