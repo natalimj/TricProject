@@ -14,12 +14,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = {"http://localhost:3000"})
+@CrossOrigin
 @RestController
 @RequestMapping("/userApi")
 public class UserController {
-
-    private final Logger log = LoggerFactory.getLogger(UserController.class);
     @Autowired
     UserService userService;
     @Autowired
