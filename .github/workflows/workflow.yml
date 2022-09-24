@@ -72,7 +72,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'tric-project'
+          app-name: 'tricproject'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E6E8FEDB0E094955945B5B2743921F71 }}
+          publish-profile: ${{ secrets.AzureAppService_PublishProfile_eeb64d420a254e528ae253a22289d906 }}
           package: '*.jar'
