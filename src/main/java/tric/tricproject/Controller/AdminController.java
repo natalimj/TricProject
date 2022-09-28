@@ -110,9 +110,11 @@ public class AdminController {
     }
 
     @PostMapping("/addQuestion")
-    public ResponseEntity<Question> addQuestion(@RequestParam String question,@RequestParam String firstAnswer,@RequestParam String secondAnswer) {
+    public ResponseEntity<Question> addQuestion(@RequestParam("questionText") String questionText,
+                                                @RequestParam("firstAnswer") String firstAnswer,
+                                                @RequestParam("secondAnswer") String secondAnswer) {
         try {
-            Question _question = questionService.addQuestion(question,firstAnswer,secondAnswer);
+            Question _question = questionService.addQuestion(questionText,firstAnswer,secondAnswer);
             log.info("A new question has been added. Question Id:"+_question.getQuestionId());
             return new ResponseEntity<>(_question, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -121,28 +123,20 @@ public class AdminController {
         }
     }
 
-    @PostMapping("/addQuestionV2")
-    public ResponseEntity<Question> addQuestion2(@RequestBody Question question) {
+    @PatchMapping("/editQuestion")
+    public ResponseEntity<Question> editQuestion(@RequestParam("questionText") String questionText,
+                                                 @RequestParam("firstAnswer") String firstAnswer,
+                                                 @RequestParam("secondAnswer") String secondAnswer,
+                                                 @RequestParam("questionId") long questionId) {
         try {
-            Question _question = questionService.addQuestion(question);
-            log.info("A new question has been added. Question Id:"+_question.getQuestionId());
-            return new ResponseEntity<>(_question, HttpStatus.CREATED);
-        } catch (Exception e) {
-            log.error("Internal Server Error - QuestionController/addQuestion",e);
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @PutMapping("/editQuestion")
-    public ResponseEntity<Question> editQuestion(@RequestBody Question question) {
-        try {
-            Question _question = questionService.editQuestion(question);
+            Question _question = questionService.editQuestion(questionId,questionText,firstAnswer,secondAnswer);
             return new ResponseEntity<>(_question, HttpStatus.CREATED);
         } catch (Exception e) {
             log.error("Internal Server Error - QuestionController/editQuestion",e);
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
 
     @DeleteMapping(value = "/deleteQuestion")
@@ -158,3 +152,5 @@ public class AdminController {
     @GetMapping("/questions")
     public List<Question> getAllQuestions() {  return questionService.getAllQuestions(); }
 }
+
+
