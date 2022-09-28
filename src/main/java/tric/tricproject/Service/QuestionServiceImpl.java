@@ -10,6 +10,7 @@ import tric.tricproject.Repository.VoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,25 +24,22 @@ public class QuestionServiceImpl implements  QuestionService{
 
     @Autowired
     VoteRepository voteRepository;
-
-    @Override
-    public Question addQuestion(Question questionToSave) {
-        Question question = questionRepository.save(questionToSave);
-        updateQuestionNumbers();
-        return question;
-    }
-
     @Override
     public Question addQuestion(String questionText, String firstAnswerText, String secondAnswerText) {
-        Question question = new Question(questionText);
-        question = questionRepository.save(question);
+
+        List<Answer> answers =new ArrayList<>();
+        Question question = questionRepository.save(new Question(questionText));
+
         Answer firstAnswer = new Answer(firstAnswerText, question);
         Answer secondAnswer = new Answer(secondAnswerText, question);
         answerRepository.save(firstAnswer);
         answerRepository.save(secondAnswer);
-        question = questionRepository.findByQuestionId(question.getQuestionId());
+        answers.add(firstAnswer);
+        answers.add(secondAnswer);
         updateQuestionNumbers();
-        return question;
+        question = questionRepository.findByQuestionId(question.getQuestionId());
+        question.setAnswers(answers);
+        return  question;
     }
 
     @Override
@@ -57,8 +55,12 @@ public class QuestionServiceImpl implements  QuestionService{
     }
 
     @Override
-    public Question editQuestion(Question questionToUpdate) {
-        return questionRepository.save(questionToUpdate);
+    public Question editQuestion(long questionId,String questionText,String firstAnswer, String secondAnswer){
+        Question question = questionRepository.findByQuestionId(questionId);
+        question.setQuestionText(questionText);
+        question.getAnswers().get(0).setAnswerText(firstAnswer);
+        question.getAnswers().get(1).setAnswerText(secondAnswer);
+        return questionRepository.save(question);
     }
 
     @Override
