@@ -151,6 +151,12 @@ public class AdminController {
 
     @GetMapping("/questions")
     public List<Question> getAllQuestions() {  return questionService.getAllQuestions(); }
+
+    @PostMapping("/showFinalResult")
+    public ResponseEntity<Void> showFinalResult() {
+        template.convertAndSend("/topic/finalResult", true);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
 
 
