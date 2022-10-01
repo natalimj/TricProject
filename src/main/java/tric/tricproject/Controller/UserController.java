@@ -1,7 +1,10 @@
 package tric.tricproject.Controller;
 
+import tric.tricproject.Model.Question;
+import tric.tricproject.Model.Status;
 import tric.tricproject.Model.User;
 import tric.tricproject.Model.Vote;
+import tric.tricproject.Service.StatusService;
 import tric.tricproject.Service.UserService;
 import tric.tricproject.Service.VoteService;
 import org.slf4j.Logger;
@@ -22,11 +25,19 @@ public class UserController {
     UserService userService;
     @Autowired
     VoteService voteService;
+
+    @Autowired
+    StatusService statusService;
     @Autowired
     SimpMessagingTemplate template;
     @GetMapping("/users")
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    public ResponseEntity<List<User>> getAllUsers() {
+        try {
+            List<User> users = userService.getAllUsers();
+            return new ResponseEntity<>(users, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
     @PostMapping("/user")
     public ResponseEntity<User> createUser(@RequestBody User user) {
@@ -43,6 +54,16 @@ public class UserController {
         try {
             Vote _vote = voteService.addVote(vote);
             return new ResponseEntity<>(_vote, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/getAppStatus")
+    public ResponseEntity<Boolean> getAppStatus() {
+        try {
+            Boolean isActive = statusService.getStatus();
+            return new ResponseEntity<>(isActive, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
