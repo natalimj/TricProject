@@ -4,8 +4,11 @@ import tric.tricproject.Model.FinalResult;
 import tric.tricproject.Model.User;
 import tric.tricproject.Model.Vote;
 import tric.tricproject.Service.CategoryService;
+import tric.tricproject.Service.StatusService;
 import tric.tricproject.Service.UserService;
 import tric.tricproject.Service.VoteService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,14 +25,20 @@ public class UserController {
     UserService userService;
     @Autowired
     VoteService voteService;
-
     @Autowired
     CategoryService categoryService;
     @Autowired
+    StatusService statusService;
+    @Autowired
     SimpMessagingTemplate template;
     @GetMapping("/users")
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    public ResponseEntity<List<User>> getAllUsers() {
+        try {
+            List<User> users = userService.getAllUsers();
+            return new ResponseEntity<>(users, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
     @PostMapping("/user")
     public ResponseEntity<User> createUser(@RequestBody User user) {
@@ -50,7 +59,15 @@ public class UserController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+    @GetMapping("/getAppStatus")
+    public ResponseEntity<Boolean> getAppStatus() {
+        try {
+            Boolean isActive = statusService.getStatus();
+            return new ResponseEntity<>(isActive, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     @GetMapping("/finalResult")
     public ResponseEntity<List<FinalResult>> getFinalResult(@RequestParam("userId") long userId) {
         try {
@@ -60,7 +77,4 @@ public class UserController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-
-
 }

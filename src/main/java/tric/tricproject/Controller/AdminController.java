@@ -9,11 +9,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import tric.tricproject.Model.Question;
 import tric.tricproject.Model.Result;
-import tric.tricproject.Model.User;
-import tric.tricproject.Service.PlayResultService;
-import tric.tricproject.Service.QuestionService;
-import tric.tricproject.Service.UserService;
-import tric.tricproject.Service.VoteService;
+import tric.tricproject.Model.Status;
+import tric.tricproject.Service.*;
 
 import java.util.List;
 
@@ -21,7 +18,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/adminApi")
 public class AdminController {
-    private final Logger log = LoggerFactory.getLogger(UserController.class);
     @Autowired
     UserService userService;
     @Autowired
@@ -34,51 +30,24 @@ public class AdminController {
     PlayResultService playResultService;
 
     @Autowired
+    StatusService statusService;
+
+    @Autowired
     SimpMessagingTemplate template;
 
-    /*
-    //do we need this?
-    @GetMapping("/exportExcel2")
-    public void exportVoteToExcel(HttpServletResponse response) throws IOException {
-        response.setContentType("application/octet-stream");
-        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
-        String currentDateTime = dateFormatter.format(new Date());
-
-        String headerKey = "Content-Disposition";
-        String headerValue = "attachment; filename=votes_" + currentDateTime + ".xlsx";
-        response.setHeader(headerKey, headerValue);
-
-        List<Vote> votes = voteService.getAllVotes();
-        VoteExcelExporter excelExporter = new VoteExcelExporter(votes);
-        log.info("Exporting an excel file : "+"votes_" + currentDateTime + ".xlsx");
-        excelExporter.export(response);
-    }
-
-    @GetMapping("/exportExcel")
-    public void exportPlayResultToExcel(HttpServletResponse response,@RequestParam Long playResultId) throws IOException {
-        response.setContentType("application/octet-stream");
-        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
-        String currentDateTime = dateFormatter.format(new Date());
-
-        String headerKey = "Content-Disposition";
-        String headerValue = "attachment; filename=play_results_" + currentDateTime + ".xlsx";
-        response.setHeader(headerKey, headerValue);
-
-        List<PlayResult> playResults = playResultService.getAllPlayResults(); // TODO :get by date or Id?
-        PlayResultExcelExporter excelExporter = new PlayResultExcelExporter(playResults);
-        log.info("Exporting an excel file : "+"play_results_" + currentDateTime + ".xlsx");
-        excelExporter.export(response);
-    }
-*/
     @PostMapping("/endSession")
-    public void endSession() {
-        playResultService.createPlayResults();
-
-        //delete all users and votes
-        userService.deleteAllUsers();
-        voteService.deleteAllVotes();
-
-        log.info("session ended...");
+    public ResponseEntity<Status> endSession() {
+        try {
+            playResultService.createPlayResults();   //TODO: download play result file
+            //delete all users and votes
+            userService.deleteAllUsers();
+            voteService.deleteAllVotes();
+            Status status = statusService.setAppStatus(false);
+            template.convertAndSend("/topic/status", false);
+            return new ResponseEntity<>(status, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
     @GetMapping("/question")
     public ResponseEntity<Question> getQuestion(@RequestParam("questionNumber") int questionNumber) {
@@ -91,7 +60,6 @@ public class AdminController {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
-            log.info("Internal Server Error - QuestionController/getQuestion",e);
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -104,7 +72,6 @@ public class AdminController {
             template.convertAndSend("/topic/result",result);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
-            log.error("Internal Server Error - QuestionController/getResult",e);
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -115,10 +82,8 @@ public class AdminController {
                                                 @RequestParam("secondAnswer") String secondAnswer) {
         try {
             Question _question = questionService.addQuestion(questionText,firstAnswer,secondAnswer);
-            log.info("A new question has been added. Question Id:"+_question.getQuestionId());
             return new ResponseEntity<>(_question, HttpStatus.CREATED);
         } catch (Exception e) {
-            log.error("Internal Server Error - QuestionController/addQuestion",e);
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -132,12 +97,9 @@ public class AdminController {
             Question _question = questionService.editQuestion(questionId,questionText,firstAnswer,secondAnswer);
             return new ResponseEntity<>(_question, HttpStatus.CREATED);
         } catch (Exception e) {
-            log.error("Internal Server Error - QuestionController/editQuestion",e);
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-
 
     @DeleteMapping(value = "/deleteQuestion")
     public ResponseEntity<Long> deleteQuestion(@RequestParam Long questionId) {
@@ -148,10 +110,25 @@ public class AdminController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
     @GetMapping("/questions")
-    public List<Question> getAllQuestions() {  return questionService.getAllQuestions(); }
-
+    public ResponseEntity<List<Question>> getAllQuestions() {
+        try {
+            List<Question> questions = questionService.getAllQuestions();
+            return new ResponseEntity<>(questions, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @PostMapping("/activate")
+    public ResponseEntity<Status> setActive() {
+        try {
+            Status status = statusService.setAppStatus(true);
+            template.convertAndSend("/topic/status",true);
+            return new ResponseEntity<>(status, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     @PostMapping("/showFinalResult")
     public ResponseEntity<Void> showFinalResult() {
         template.convertAndSend("/topic/finalResult", true);
