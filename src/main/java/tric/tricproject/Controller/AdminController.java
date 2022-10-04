@@ -1,5 +1,7 @@
 package tric.tricproject.Controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -7,8 +9,11 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import tric.tricproject.Model.Question;
 import tric.tricproject.Model.Result;
-import tric.tricproject.Model.Status;
-import tric.tricproject.Service.*;
+import tric.tricproject.Model.User;
+import tric.tricproject.Service.PlayResultService;
+import tric.tricproject.Service.QuestionService;
+import tric.tricproject.Service.UserService;
+import tric.tricproject.Service.VoteService;
 
 import java.util.List;
 
@@ -16,6 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/adminApi")
 public class AdminController {
+    private final Logger log = LoggerFactory.getLogger(UserController.class);
     @Autowired
     UserService userService;
     @Autowired
@@ -81,6 +87,7 @@ public class AdminController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+        log.info("session ended...");
     }
     @GetMapping("/question")
     public ResponseEntity<Question> getQuestion(@RequestParam("questionNumber") int questionNumber) {
@@ -93,7 +100,7 @@ public class AdminController {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
-
+            log.info("Internal Server Error - QuestionController/getQuestion",e);
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -106,6 +113,7 @@ public class AdminController {
             template.convertAndSend("/topic/result",result);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
+            log.error("Internal Server Error - QuestionController/getResult",e);
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -116,8 +124,10 @@ public class AdminController {
                                                 @RequestParam("secondAnswer") String secondAnswer) {
         try {
             Question _question = questionService.addQuestion(questionText,firstAnswer,secondAnswer);
+            log.info("A new question has been added. Question Id:"+_question.getQuestionId());
             return new ResponseEntity<>(_question, HttpStatus.CREATED);
         } catch (Exception e) {
+            log.error("Internal Server Error - QuestionController/addQuestion",e);
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -131,9 +141,12 @@ public class AdminController {
             Question _question = questionService.editQuestion(questionId,questionText,firstAnswer,secondAnswer);
             return new ResponseEntity<>(_question, HttpStatus.CREATED);
         } catch (Exception e) {
+            log.error("Internal Server Error - QuestionController/editQuestion",e);
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
 
     @DeleteMapping(value = "/deleteQuestion")
     public ResponseEntity<Long> deleteQuestion(@RequestParam Long questionId) {
@@ -168,6 +181,13 @@ public class AdminController {
 
 
 
+    public List<Question> getAllQuestions() {  return questionService.getAllQuestions(); }
+
+    @PostMapping("/showFinalResult")
+    public ResponseEntity<Void> showFinalResult() {
+        template.convertAndSend("/topic/finalResult", true);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
 
 

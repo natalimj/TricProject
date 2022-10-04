@@ -1,10 +1,7 @@
 package tric.tricproject.Controller;
 
-import tric.tricproject.Model.Question;
-import tric.tricproject.Model.Status;
 import tric.tricproject.Model.User;
 import tric.tricproject.Model.Vote;
-import tric.tricproject.Service.StatusService;
 import tric.tricproject.Service.UserService;
 import tric.tricproject.Service.VoteService;
 import org.slf4j.Logger;
@@ -25,6 +22,9 @@ public class UserController {
     UserService userService;
     @Autowired
     VoteService voteService;
+
+    @Autowired
+    CategoryService categoryService;
 
     @Autowired
     StatusService statusService;
@@ -68,4 +68,17 @@ public class UserController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/finalResult")
+    public ResponseEntity<List<FinalResult>> getFinalResult(@RequestParam("userId") long userId) {
+        try {
+            List<FinalResult> finalResults = categoryService.getFinalResults(userId);
+            return new ResponseEntity<>(finalResults , HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+
 }
