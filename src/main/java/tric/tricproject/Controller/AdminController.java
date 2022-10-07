@@ -54,8 +54,21 @@ public class AdminController {
         try {
             Question question = questionService.getQuestionByNumber(questionNumber);
             if( question != null){
-                template.convertAndSend("/topic/question", question);
                 return new ResponseEntity<>(question, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @GetMapping("/showQuestion")
+    public ResponseEntity showQuestion(@RequestParam("questionNumber") int questionNumber) {
+        try {
+            Question question = questionService.getQuestionByNumber(questionNumber);
+            if( question != null){
+                template.convertAndSend("/topic/question", question);
+                return new ResponseEntity<>(HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
@@ -133,6 +146,26 @@ public class AdminController {
     public ResponseEntity<Void> showFinalResult() {
         template.convertAndSend("/topic/finalResult", true);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/addQuestionTime")
+    public ResponseEntity<Question> addQuestionTime(@RequestParam("questionId") long questionId, @RequestParam("time") int time) {
+        try {
+            Question _question = questionService.addQuestionTime(questionId,time);
+            return new ResponseEntity<>(_question, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/numberOfQuestions")
+    public ResponseEntity<Integer> getNumberOfQuestions() {
+        try {
+            int numberOfQuestions = questionService.getAllQuestions().size();
+            return new ResponseEntity<>(numberOfQuestions , HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
 

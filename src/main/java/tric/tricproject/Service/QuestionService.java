@@ -10,13 +10,13 @@ import java.util.Optional;
 @Service
 public interface QuestionService {
 
-    public Question addQuestion(String questionText, String firstAnswerText, String secondAnswerText);
-    public void deleteQuestion(Question question);
-    public void deleteQuestionById(long questionId);
-    public Question editQuestion(long questionId,String questionText,String firstAnswer, String secondAnswer);
-    public List<Question> getAllQuestions();
-    public Question getQuestionByNumber(int questionNumber);
-    public void updateQuestionNumbers();
-    public Result getResult(long questionId);
-
+    Question addQuestion(String questionText, String firstAnswerText, String secondAnswerText);
+    void deleteQuestion(Question question);
+    void deleteQuestionById(long questionId);
+    Question editQuestion(long questionId,String questionText,String firstAnswer, String secondAnswer);
+    List<Question> getAllQuestions();
+    Question getQuestionByNumber(int questionNumber);
+    void updateQuestionNumbers();
+    Result getResult(long questionId);
+    Question addQuestionTime(long questionId, int time);
 }

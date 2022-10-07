@@ -26,7 +26,9 @@ public class QuestionServiceImpl implements  QuestionService{
     public Question addQuestion(String questionText, String firstAnswerText, String secondAnswerText) {
 
         List<Answer> answers =new ArrayList<>();
-        Question question = questionRepository.save(new Question(questionText));
+        Question newQuestion = new Question(questionText);
+        newQuestion.setTime(30); // default time - 30 seconds
+        Question question = questionRepository.save(newQuestion);
 
         Answer firstAnswer = new Answer(firstAnswerText, question);
         Answer secondAnswer = new Answer(secondAnswerText, question);
@@ -92,6 +94,13 @@ public class QuestionServiceImpl implements  QuestionService{
         }
 
         return result;
+    }
+
+    @Override
+    public Question addQuestionTime(long questionId, int time) {
+       Question question = questionRepository.findByQuestionId(questionId);
+       question.setTime(time);
+       return questionRepository.save(question);
     }
 
     public void updateQuestionNumbers(){
