@@ -1,12 +1,10 @@
 package tric.tricproject.Controller;
 
 import tric.tricproject.Model.FinalResult;
+import tric.tricproject.Model.Result;
 import tric.tricproject.Model.User;
 import tric.tricproject.Model.Vote;
-import tric.tricproject.Service.CategoryService;
-import tric.tricproject.Service.StatusService;
-import tric.tricproject.Service.UserService;
-import tric.tricproject.Service.VoteService;
+import tric.tricproject.Service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +29,9 @@ public class UserController {
     StatusService statusService;
     @Autowired
     SimpMessagingTemplate template;
+    @Autowired
+    QuestionService questionService;
+
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers() {
         try {
@@ -64,6 +65,16 @@ public class UserController {
         try {
             Boolean isActive = statusService.getStatus();
             return new ResponseEntity<>(isActive, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @GetMapping("/result")  //TODO: maybe it can be only a service method - call with timer?
+    public ResponseEntity<Result> getResult(@RequestParam("questionId") long questionId) {
+        try {
+            Result result = questionService.getResult(questionId);
+            template.convertAndSend("/topic/result", result);
+            return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }

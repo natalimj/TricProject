@@ -77,18 +77,6 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/result")  //TODO: maybe it can be only a service method - call with timer?
-    public ResponseEntity<Result> getResult(@RequestParam("questionId") long questionId) {
-
-        try {
-            Result result = questionService.getResult(questionId);
-            template.convertAndSend("/topic/result", result);
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     @PostMapping("/addQuestion")
     public ResponseEntity<Question> addQuestion(@RequestParam("questionText") String questionText,
                                                 @RequestParam("firstAnswer") String firstAnswer,
