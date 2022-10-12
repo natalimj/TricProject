@@ -64,6 +64,7 @@ public class WebSecurityConfig {
 				.exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 				.authorizeRequests().antMatchers("/api/auth/**", "/ws-message/**", "/userApi/**").permitAll()
+				.antMatchers("/adminApi/result").permitAll()
 				.antMatchers("/api/test/**").permitAll()
 				.antMatchers(HttpMethod.GET,"/adminApi/result/").permitAll()
 				.anyRequest().authenticated();
