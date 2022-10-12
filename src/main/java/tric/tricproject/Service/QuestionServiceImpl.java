@@ -103,6 +103,12 @@ public class QuestionServiceImpl implements  QuestionService{
        return questionRepository.save(question);
     }
 
+    @Override
+    public void deleteAllQuestions() {
+        answerRepository.deleteAll();
+        questionRepository.deleteAll();
+    }
+
     public void updateQuestionNumbers(){
         List<Question> questions = questionRepository.findAllByOrderByQuestionIdAsc();
         for(int i= 0;i<questions.size();i++){

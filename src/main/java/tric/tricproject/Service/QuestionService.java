@@ -19,4 +19,6 @@ public interface QuestionService {
     void updateQuestionNumbers();
     Result getResult(long questionId);
     Question addQuestionTime(long questionId, int time);
+
+    void deleteAllQuestions();
 }

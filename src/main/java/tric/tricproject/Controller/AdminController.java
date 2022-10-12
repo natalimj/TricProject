@@ -53,7 +53,7 @@ public class AdminController {
     public ResponseEntity<Question> getQuestion(@RequestParam("questionNumber") int questionNumber) {
         try {
             Question question = questionService.getQuestionByNumber(questionNumber);
-            if( question != null){
+            if (question != null) {
                 return new ResponseEntity<>(question, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -66,7 +66,7 @@ public class AdminController {
     public ResponseEntity showQuestion(@RequestParam("questionNumber") int questionNumber) {
         try {
             Question question = questionService.getQuestionByNumber(questionNumber);
-            if( question != null){
+            if (question != null) {
                 template.convertAndSend("/topic/question", question);
                 return new ResponseEntity<>(HttpStatus.OK);
             } else {
@@ -82,7 +82,7 @@ public class AdminController {
 
         try {
             Result result = questionService.getResult(questionId);
-            template.convertAndSend("/topic/result",result);
+            template.convertAndSend("/topic/result", result);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -94,7 +94,7 @@ public class AdminController {
                                                 @RequestParam("firstAnswer") String firstAnswer,
                                                 @RequestParam("secondAnswer") String secondAnswer) {
         try {
-            Question _question = questionService.addQuestion(questionText,firstAnswer,secondAnswer);
+            Question _question = questionService.addQuestion(questionText, firstAnswer, secondAnswer);
             return new ResponseEntity<>(_question, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -107,7 +107,7 @@ public class AdminController {
                                                  @RequestParam("secondAnswer") String secondAnswer,
                                                  @RequestParam("questionId") long questionId) {
         try {
-            Question _question = questionService.editQuestion(questionId,questionText,firstAnswer,secondAnswer);
+            Question _question = questionService.editQuestion(questionId, questionText, firstAnswer, secondAnswer);
             return new ResponseEntity<>(_question, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -119,6 +119,15 @@ public class AdminController {
         try {
             questionService.deleteQuestionById(questionId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @DeleteMapping(value = "/deleteQuestions")
+    public ResponseEntity deleteAllQuestions() {
+        try {
+            questionService.deleteAllQuestions();
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
