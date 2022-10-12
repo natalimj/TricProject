@@ -49,6 +49,7 @@ public class AdminController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @GetMapping("/question")
     public ResponseEntity<Question> getQuestion(@RequestParam("questionNumber") int questionNumber) {
         try {
@@ -62,6 +63,7 @@ public class AdminController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @GetMapping("/showQuestion")
     public ResponseEntity showQuestion(@RequestParam("questionNumber") int questionNumber) {
         try {
@@ -111,6 +113,7 @@ public class AdminController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @DeleteMapping(value = "/deleteQuestions")
     public ResponseEntity deleteAllQuestions() {
         try {
@@ -120,6 +123,7 @@ public class AdminController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @GetMapping("/questions")
     public ResponseEntity<List<Question>> getAllQuestions() {
         try {
@@ -129,6 +133,7 @@ public class AdminController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @PostMapping("/activate")
     public ResponseEntity<Status> setActive() {
         try {
@@ -139,6 +144,7 @@ public class AdminController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @PostMapping("/showFinalResult")
     public ResponseEntity<Void> showFinalResult() {
         template.convertAndSend("/topic/finalResult", true);
