@@ -1,9 +1,7 @@
 package tric.tricproject.Service;
 
-import tric.tricproject.Model.Answer;
-import tric.tricproject.Model.Question;
-import tric.tricproject.Model.Result;
-import tric.tricproject.Model.Vote;
+import com.google.gson.Gson;
+import tric.tricproject.Model.*;
 import tric.tricproject.Repository.AnswerRepository;
 import tric.tricproject.Repository.QuestionRepository;
 import tric.tricproject.Repository.VoteRepository;
@@ -79,8 +77,6 @@ public class QuestionServiceImpl implements  QuestionService{
         Answer answer1 =  question.getAnswers().get(0);
         Answer answer2 =  question.getAnswers().get(1);
 
-        //TODO : Note: in frontend, don't save a question without two answers- show warning
-
         List<Vote> votes = voteRepository.findAllByQuestionId(questionId);
         Result result = new Result();
         result.setQuestion(question);
@@ -102,7 +98,19 @@ public class QuestionServiceImpl implements  QuestionService{
        question.setTime(time);
        return questionRepository.save(question);
     }
-
+    public String getResultListJson() {
+        List<PlayResult> resultList = new ArrayList<>();
+        for(Question question: getAllQuestions()){
+            Result result = getResult(question.getQuestionId());
+            resultList.add(new PlayResult(result.getQuestion().getQuestionNumber(),
+                    result.getQuestion().getQuestionText(),
+                    result.getFirstAnswer().getAnswerText(),
+                    result.getFirstAnswerRate(),
+                    result.getSecondAnswer().getAnswerText(),
+                    result.getSecondAnswerRate()));
+        }
+        return new Gson().toJson(resultList);
+    }
     @Override
     public void deleteAllQuestions() {
         answerRepository.deleteAll();

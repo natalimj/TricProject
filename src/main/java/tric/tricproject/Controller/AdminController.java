@@ -1,17 +1,20 @@
 package tric.tricproject.Controller;
 
+import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
-import tric.tricproject.Model.Question;
-import tric.tricproject.Model.Result;
-import tric.tricproject.Model.Status;
+import tric.tricproject.Model.*;
 import tric.tricproject.Service.*;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin
@@ -27,24 +30,21 @@ public class AdminController {
     QuestionService questionService;
 
     @Autowired
-    PlayResultService playResultService;
-
-    @Autowired
     StatusService statusService;
 
     @Autowired
     SimpMessagingTemplate template;
 
-    @PostMapping("/endSession")
-    public ResponseEntity<Status> endSession() {
+    @GetMapping("/endSession")
+    public ResponseEntity<String> endSession() {
         try {
-            playResultService.createPlayResults();   //TODO: download play result file
+            String resultJson =questionService.getResultListJson();
             //delete all users and votes
             userService.deleteAllUsers();
             voteService.deleteAllVotes();
             Status status = statusService.setAppStatus(false);
             template.convertAndSend("/topic/status", false);
-            return new ResponseEntity<>(status, HttpStatus.CREATED);
+            return new ResponseEntity<>(resultJson, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
