@@ -1,11 +1,12 @@
 package tric.tricproject.Service;
 
+import tric.tricproject.Model.PlayResult;
 import tric.tricproject.Model.Question;
 import tric.tricproject.Model.Result;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 public interface QuestionService {
@@ -19,6 +20,6 @@ public interface QuestionService {
     void updateQuestionNumbers();
     Result getResult(long questionId);
     Question addQuestionTime(long questionId, int time);
-
+    String getResultListJson();
     void deleteAllQuestions();
 }
