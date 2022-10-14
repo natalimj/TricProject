@@ -36,4 +36,9 @@ public class ContributorServiceImpl implements ContributorService {
     public List<Contributor> getDevTeam() {
         return  contributorRepository.findAllByType("Dev Team");
     }
+
+    @Override
+    public void deleteContributorById(Long contributorId) {
+        contributorRepository.deleteById(contributorId);
+    }
 }

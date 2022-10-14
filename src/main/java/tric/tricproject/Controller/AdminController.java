@@ -1,20 +1,14 @@
 package tric.tricproject.Controller;
 
-import com.google.gson.Gson;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import tric.tricproject.Model.*;
 import tric.tricproject.Service.*;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin
@@ -111,7 +105,7 @@ public class AdminController {
     public ResponseEntity<Long> deleteQuestion(@RequestParam Long questionId) {
         try {
             questionService.deleteQuestionById(questionId);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(questionId, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -185,7 +179,7 @@ public class AdminController {
         }
     }
 
-    @PostMapping("/editContributor")
+    @PatchMapping("/editContributor")
     public ResponseEntity<Contributor> editContributor(@RequestBody Contributor contributor) {
         try {
             Contributor _contributor = contributorService.editContributor(contributor);
@@ -205,7 +199,15 @@ public class AdminController {
         }
     }
 
-
+    @DeleteMapping(value = "/deleteContributor")
+    public ResponseEntity<Long> deleteContributor(@RequestParam Long contributorId) {
+        try {
+            contributorService.deleteContributorById(contributorId);
+            return new ResponseEntity<>(contributorId, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }
 
