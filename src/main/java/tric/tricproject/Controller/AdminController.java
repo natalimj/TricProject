@@ -7,9 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
-import tric.tricproject.Model.Question;
-import tric.tricproject.Model.Result;
-import tric.tricproject.Model.Status;
+import tric.tricproject.Model.*;
 import tric.tricproject.Service.*;
 
 import java.util.List;
@@ -31,6 +29,9 @@ public class AdminController {
 
     @Autowired
     StatusService statusService;
+
+    @Autowired
+    ContributorService contributorService;
 
     @Autowired
     SimpMessagingTemplate template;
@@ -170,6 +171,40 @@ public class AdminController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
+    @PostMapping("/contributor")
+    public ResponseEntity<Contributor> addContributor(@RequestBody Contributor contributor) {
+        try {
+            Contributor _contributor = contributorService.addContributor(contributor);
+            return new ResponseEntity<>(_contributor, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/editContributor")
+    public ResponseEntity<Contributor> editContributor(@RequestBody Contributor contributor) {
+        try {
+            Contributor _contributor = contributorService.editContributor(contributor);
+            return new ResponseEntity<>(_contributor, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/contributors")
+    public ResponseEntity<List<Contributor>> getAllContributors() {
+        try {
+            List<Contributor> contributors = contributorService.getAllContributors();
+            return new ResponseEntity<>(contributors, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+
 }
 
 
