@@ -1,50 +1,44 @@
 package tric.tricproject.Model;
 
-import javax.persistence.*;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-@Entity
-@Table(name="playResult")
 public class PlayResult {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long playResultId;
-    @Column(name = "date")
-    private Timestamp date;
-    @Column(name = "questionNumber")
     private int questionNumber;
-    @Column(name = "firstAnswer")
+    private String questionText;
+    private String firstAnswer;
     private double firstAnswerRate;
-    @Column(name = "secondAnswer")
+    private String secondAnswer;
     private double secondAnswerRate;
 
-    public PlayResult(long playResultId, Timestamp date, int questionNumber, double firstAnswerRate, double secondAnswerRate) {
-        this.playResultId = playResultId;
-        this.date = date;
+    public PlayResult(int questionNumber, String questionText, String firstAnswer, double firstAnswerRate, String secondAnswer, double secondAnswerRate) {
         this.questionNumber = questionNumber;
+        this.questionText = questionText;
+        this.firstAnswer = firstAnswer;
         this.firstAnswerRate = firstAnswerRate;
+        this.secondAnswer = secondAnswer;
         this.secondAnswerRate = secondAnswerRate;
     }
 
-    public PlayResult(Timestamp date, int questionNumber, double firstAnswerRate, double secondAnswerRate) {
-        this.date = date;
+    public int getQuestionNumber() {
+        return questionNumber;
+    }
+
+    public void setQuestionNumber(int questionNumber) {
         this.questionNumber = questionNumber;
-        this.firstAnswerRate = firstAnswerRate;
-        this.secondAnswerRate = secondAnswerRate;
     }
 
-    public PlayResult() {
+    public String getQuestionText() {
+        return questionText;
     }
 
-    public long getPlayResultId() {
-        return playResultId;
+    public void setQuestionText(String questionText) {
+        this.questionText = questionText;
     }
 
-    public void setPlayResultId(long playResultId) {
-        this.playResultId = playResultId;
+    public String getFirstAnswer() {
+        return firstAnswer;
+    }
+
+    public void setFirstAnswer(String firstAnswer) {
+        this.firstAnswer = firstAnswer;
     }
 
     public double getFirstAnswerRate() {
@@ -55,30 +49,19 @@ public class PlayResult {
         this.firstAnswerRate = firstAnswerRate;
     }
 
+    public String getSecondAnswer() {
+        return secondAnswer;
+    }
+
+    public void setSecondAnswer(String secondAnswer) {
+        this.secondAnswer = secondAnswer;
+    }
+
     public double getSecondAnswerRate() {
         return secondAnswerRate;
     }
 
     public void setSecondAnswerRate(double secondAnswerRate) {
         this.secondAnswerRate = secondAnswerRate;
-    }
-
-    public Timestamp getDate() {
-        return date;
-    }
-
-    public void setDate(Timestamp date) {
-        this.date = date;
-    }
-    public int getQuestionNumber() {
-        return questionNumber;
-    }
-
-    public void setQuestionNumber(int questionNumber) {
-        this.questionNumber = questionNumber;
-    }
-
-    public String getDateString(){
-        return new SimpleDateFormat("MM/dd/yyyy").format(new Date(date.getTime()));
     }
 }
