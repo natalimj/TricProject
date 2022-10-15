@@ -30,6 +30,9 @@ public class AdminController {
     ContributorService contributorService;
 
     @Autowired
+    PlayInfoService playInfoService;
+
+    @Autowired
     SimpMessagingTemplate template;
 
     @GetMapping("/endSession")
@@ -206,6 +209,16 @@ public class AdminController {
             return new ResponseEntity<>(contributorId, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PatchMapping("/playInfo")
+    public ResponseEntity<PlayInfo> editPlayInfo(@RequestBody PlayInfo playInfo) {
+        try {
+            PlayInfo _playInfo = playInfoService.editPlayInfo(playInfo);
+            return new ResponseEntity<>(_playInfo, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

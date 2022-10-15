@@ -28,6 +28,9 @@ public class UserController {
     QuestionService questionService;
 
     @Autowired
+    PlayInfoService playInfoService;
+
+    @Autowired
     ContributorService contributorService;
 
     @GetMapping("/users")
@@ -102,6 +105,17 @@ public class UserController {
         try {
             List<Contributor> contributors = contributorService.getDevTeam();
             return new ResponseEntity<>(contributors, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    @GetMapping("/getPlayInfo")
+    public ResponseEntity<PlayInfo> getPlayInfo() {
+        try {
+            PlayInfo playInfo = playInfoService.getPlayInfo();
+            return new ResponseEntity<>(playInfo, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
