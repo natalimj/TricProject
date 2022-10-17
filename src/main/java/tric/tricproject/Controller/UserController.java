@@ -1,12 +1,7 @@
 package tric.tricproject.Controller;
 
-import tric.tricproject.Model.FinalResult;
-import tric.tricproject.Model.Result;
-import tric.tricproject.Model.User;
-import tric.tricproject.Model.Vote;
+import tric.tricproject.Model.*;
 import tric.tricproject.Service.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +26,12 @@ public class UserController {
     SimpMessagingTemplate template;
     @Autowired
     QuestionService questionService;
+
+    @Autowired
+    PlayInfoService playInfoService;
+
+    @Autowired
+    ContributorService contributorService;
 
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers() {
@@ -84,6 +85,37 @@ public class UserController {
         try {
             List<FinalResult> finalResults = categoryService.getFinalResults(userId);
             return new ResponseEntity<>(finalResults , HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/cast")
+    public ResponseEntity<List<Contributor>> getCast() {
+        try {
+            List<Contributor> contributors = contributorService.getCast();
+            return new ResponseEntity<>(contributors, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/devTeam")
+    public ResponseEntity<List<Contributor>> getDevTeam() {
+        try {
+            List<Contributor> contributors = contributorService.getDevTeam();
+            return new ResponseEntity<>(contributors, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    @GetMapping("/getPlayInfo")
+    public ResponseEntity<PlayInfo> getPlayInfo() {
+        try {
+            PlayInfo playInfo = playInfoService.getPlayInfo();
+            return new ResponseEntity<>(playInfo, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
