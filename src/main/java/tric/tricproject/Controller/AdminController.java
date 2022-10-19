@@ -149,7 +149,7 @@ public class AdminController {
     public ResponseEntity<Status> setInactive() {
         try {
             Status status = statusService.setAppStatus(false);
-            template.convertAndSend("/topic/status",true);
+            template.convertAndSend("/topic/status",false);
             return new ResponseEntity<>(status, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
