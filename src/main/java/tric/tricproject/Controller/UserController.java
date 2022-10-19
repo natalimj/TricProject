@@ -83,7 +83,8 @@ public class UserController {
     @GetMapping("/finalResult")
     public ResponseEntity<List<FinalResult>> getFinalResult(@RequestParam("userId") long userId) {
         try {
-            List<FinalResult> finalResults = categoryService.getFinalResults(userId);
+            List<Category> categories = categoryService.getAllCategories();
+            List<FinalResult> finalResults = categoryService.getFinalResults(userId, categories);
             return new ResponseEntity<>(finalResults , HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
