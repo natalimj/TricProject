@@ -42,7 +42,7 @@ public class AdminController {
             //delete all users and votes
             userService.deleteAllUsers();
             voteService.deleteAllVotes();
-            Status status = statusService.setAppStatus(false);
+            statusService.setAppStatus(false);
             template.convertAndSend("/topic/status", false);
             return new ResponseEntity<>(resultJson, HttpStatus.OK);
         } catch (Exception e) {

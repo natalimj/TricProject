@@ -1,26 +1,35 @@
 package tric.tricproject.Service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tric.tricproject.Model.Category;
 import tric.tricproject.Model.FinalResult;
+import tric.tricproject.Repository.CategoryRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
 @Service
 public class CategoryServiceImpl implements CategoryService {
+    @Autowired
+    CategoryRepository categoryRepository;
+
     @Override
-    public List<FinalResult> getFinalResults(long userId) {
+    public List<FinalResult> getFinalResults(long userId, List<Category> categories) {
         List<FinalResult> finalResults = new ArrayList<>();
 
-        //TODO: create a real list of FinalResult for the user
+        //TODO: get real user input for the rate
 
-        Category cat1 = new Category(1,"Category1");
-        Category cat2 = new Category(2,"Category2",cat1);
-        Category cat3 = new Category(3,"Category3");
-        Category cat4 = new Category(4,"Category4",cat3);
-
-        finalResults.add(new FinalResult(cat2,40));
-        finalResults.add(new FinalResult(cat4,75));
+        Random random = new Random();
+        for (int i = 1; i < categories.size(); i=i+2) {
+            finalResults.add(new FinalResult(categories.get(i), (random.nextInt(10)+1)*10));
+        }
         return finalResults;
+    }
+
+    @Override
+    public List<Category> getAllCategories() {
+        return categoryRepository.findAll();
     }
 }
