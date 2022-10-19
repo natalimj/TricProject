@@ -145,6 +145,17 @@ public class AdminController {
         }
     }
 
+    @PostMapping("/deactivate")
+    public ResponseEntity<Status> setInactive() {
+        try {
+            Status status = statusService.setAppStatus(false);
+            template.convertAndSend("/topic/status",true);
+            return new ResponseEntity<>(status, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PostMapping("/showFinalResult")
     public ResponseEntity<Void> showFinalResult() {
         template.convertAndSend("/topic/finalResult", true);
