@@ -40,10 +40,10 @@ public class QuestionServiceImpl implements QuestionService {
         question.setAnswers(answers);
 
         for (int categId : firstAnswerCategories) {
-            answerCategoryRepository.save(new AnswerCategory(firstAnswerRepo, categoryRepository.findByCategoryId(categId)));
+            answerCategoryRepository.save(new AnswerCategory(firstAnswerRepo.getAnswerId(), categId));
         }
         for (int categId : secondAnswerCategories) {
-            answerCategoryRepository.save(new AnswerCategory(secondAnswerRepo, categoryRepository.findByCategoryId(categId)));
+            answerCategoryRepository.save(new AnswerCategory(secondAnswerRepo.getAnswerId(), categId));
         }
 
         return question;
@@ -74,10 +74,10 @@ public class QuestionServiceImpl implements QuestionService {
 
         //add new ones
         for (int categId : firstAnswerCategories) {
-            answerCategoryRepository.save(new AnswerCategory(question.getAnswers().get(0), categoryRepository.findByCategoryId(categId)));
+            answerCategoryRepository.save(new AnswerCategory(question.getAnswers().get(0).getAnswerId(), categId));
         }
         for (int categId : secondAnswerCategories) {
-            answerCategoryRepository.save(new AnswerCategory(question.getAnswers().get(1), categoryRepository.findByCategoryId(categId)));
+            answerCategoryRepository.save(new AnswerCategory(question.getAnswers().get(1).getAnswerId(), categId));
         }
 
         return questionRepository.save(question);

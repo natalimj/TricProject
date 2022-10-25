@@ -12,21 +12,19 @@ public class AnswerCategory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long answerCategoryId;
 
-    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="answerId", nullable=false)
-    private Answer answerId;
+    private long answerId;
 
-    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="categoryId", nullable=false)
-    private Category categoryId;
+    private long categoryId;
 
-    public AnswerCategory(long answerCategoryId, Answer answerId, Category categoryId) {
+    public AnswerCategory(long answerCategoryId, long answerId, long categoryId) {
         this.answerCategoryId = answerCategoryId;
         this.answerId = answerId;
         this.categoryId = categoryId;
     }
 
-    public AnswerCategory(Answer answerId, Category categoryId) {
+    public AnswerCategory(long answerId, long categoryId) {
         this.answerId = answerId;
         this.categoryId = categoryId;
     }
@@ -41,19 +39,19 @@ public class AnswerCategory {
         this.answerCategoryId = answerCategoryId;
     }
 
-    public Answer getAnswerId() {
+    public long getAnswerId() {
         return answerId;
     }
 
-    public void setAnswerId(Answer answerId) {
+    public void setAnswerId(long answerId) {
         this.answerId = answerId;
     }
 
-    public Category getCategoryId() {
+    public long getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(Category categoryId) {
+    public void setCategoryId(long categoryId) {
         this.categoryId = categoryId;
     }
 }

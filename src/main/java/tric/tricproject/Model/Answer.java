@@ -16,9 +16,6 @@ public class Answer {
     @JoinColumn(name="questionId", nullable=false)
     private Question question;
 
-    @OneToOne()
-    private AnswerCategory answerCategory;
-
     public Answer(int answerId, String answerText, Question question) {
         this.answerId = answerId;
         this.answerText = answerText;

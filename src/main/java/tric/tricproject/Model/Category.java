@@ -16,9 +16,6 @@ public class Category {
     @JoinColumn(name = "oppositeCategory", referencedColumnName = "categoryId")
     private Category oppositeCategory;
 
-    @OneToOne()
-    private AnswerCategory answerCategory;
-
     public Category(long categoryId, String categoryName, Category oppositeCategory) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
