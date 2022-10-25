@@ -3,10 +3,12 @@ package tric.tricproject.Repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import tric.tricproject.Model.Category;
+import tric.tricproject.Model.AnswerCategory;
+
+import java.util.List;
 
 @Repository
-public interface CategoryRepository extends JpaRepository<Category, Long> {
+public interface AnswerCategoryRepository extends JpaRepository<AnswerCategory, Long> {
     @Query
-    Category findByCategoryId(long categId);
+    List<AnswerCategory> findAllByAnswerId(long answerId);
 }

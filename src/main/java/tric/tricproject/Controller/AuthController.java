@@ -68,7 +68,7 @@ public class AuthController {
 		                                         roles));
 	}
 
-	@PostMapping("/signup")
+	/*@PostMapping("/signup")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
 		if (adminRepository.existsByUsername(signUpRequest.getUsername())) {
 			return ResponseEntity
@@ -82,7 +82,7 @@ public class AuthController {
 					.body(new MessageResponse("Error: Email is already in use!"));
 		}
 
-		// Create new user's account
+		// Create new admin's account
 		Admin user = new Admin(signUpRequest.getUsername(),
 		                       signUpRequest.getEmail(),
 		                       encoder.encode(signUpRequest.getPassword()));
@@ -121,5 +121,5 @@ public class AuthController {
 		adminRepository.save(user);
 
 		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
-	}
+	}*/
 }

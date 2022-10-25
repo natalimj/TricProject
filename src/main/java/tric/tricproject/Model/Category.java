@@ -12,11 +12,12 @@ public class Category {
     @Column(name = "name")
     private String categoryName;
 
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "oppositeCategory", referencedColumnName = "categoryId")
     private Category oppositeCategory;
 
+    @OneToOne()
+    private AnswerCategory answerCategory;
 
     public Category(long categoryId, String categoryName, Category oppositeCategory) {
         this.categoryId = categoryId;

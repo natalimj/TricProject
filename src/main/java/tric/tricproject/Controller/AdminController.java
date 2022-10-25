@@ -38,7 +38,7 @@ public class AdminController {
     @GetMapping("/endSession")
     public ResponseEntity<String> endSession() {
         try {
-            String resultJson =questionService.getResultListJson();
+            String resultJson = questionService.getResultListJson();
             //delete all users and votes
             userService.deleteAllUsers();
             voteService.deleteAllVotes();
@@ -82,9 +82,11 @@ public class AdminController {
     @PostMapping("/addQuestion")
     public ResponseEntity<Question> addQuestion(@RequestParam("questionText") String questionText,
                                                 @RequestParam("firstAnswer") String firstAnswer,
-                                                @RequestParam("secondAnswer") String secondAnswer) {
+                                                @RequestParam("secondAnswer") String secondAnswer,
+                                                @RequestParam("firstAnswerCategories") List<Integer> firstAnswerCategories,
+                                                @RequestParam("secondAnswerCategories") List<Integer> secondAnswerCategories) {
         try {
-            Question _question = questionService.addQuestion(questionText, firstAnswer, secondAnswer);
+            Question _question = questionService.addQuestion(questionText, firstAnswer, secondAnswer, firstAnswerCategories, secondAnswerCategories);
             return new ResponseEntity<>(_question, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -95,10 +97,15 @@ public class AdminController {
     public ResponseEntity<Question> editQuestion(@RequestParam("questionText") String questionText,
                                                  @RequestParam("firstAnswer") String firstAnswer,
                                                  @RequestParam("secondAnswer") String secondAnswer,
+                                                 @RequestParam("firstAnswerCategories") List<Integer> firstAnswerCategories,
+                                                 @RequestParam("secondAnswerCategories") List<Integer> secondAnswerCategories,
                                                  @RequestParam("questionId") long questionId) {
         try {
-            Question _question = questionService.editQuestion(questionId, questionText, firstAnswer, secondAnswer);
-            return new ResponseEntity<>(_question, HttpStatus.CREATED);
+            if (firstAnswerCategories.size() > 0 && secondAnswerCategories.size() > 0) {
+                Question _question = questionService.editQuestion(questionId, questionText, firstAnswer, secondAnswer, firstAnswerCategories, secondAnswerCategories);
+                return new ResponseEntity<>(_question, HttpStatus.CREATED);
+            }
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -138,7 +145,7 @@ public class AdminController {
     public ResponseEntity<Status> setActive() {
         try {
             Status status = statusService.setAppStatus(true);
-            template.convertAndSend("/topic/status",true);
+            template.convertAndSend("/topic/status", true);
             return new ResponseEntity<>(status, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -149,7 +156,7 @@ public class AdminController {
     public ResponseEntity<Status> setInactive() {
         try {
             Status status = statusService.setAppStatus(false);
-            template.convertAndSend("/topic/status",false);
+            template.convertAndSend("/topic/status", false);
             return new ResponseEntity<>(status, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -165,7 +172,7 @@ public class AdminController {
     @PostMapping("/addQuestionTime")
     public ResponseEntity<Question> addQuestionTime(@RequestParam("questionId") long questionId, @RequestParam("time") int time) {
         try {
-            Question _question = questionService.addQuestionTime(questionId,time);
+            Question _question = questionService.addQuestionTime(questionId, time);
             return new ResponseEntity<>(_question, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -176,7 +183,7 @@ public class AdminController {
     public ResponseEntity<Integer> getNumberOfQuestions() {
         try {
             int numberOfQuestions = questionService.getAllQuestions().size();
-            return new ResponseEntity<>(numberOfQuestions , HttpStatus.OK);
+            return new ResponseEntity<>(numberOfQuestions, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -27,6 +27,7 @@ public class Question {
         this.questionNumber = questionNumber;
         this.questionText = questionText;
     }
+
     public Question(int questionNumber, String questionText) {
         this.questionNumber = questionNumber;
         this.questionText = questionText;
@@ -40,9 +41,7 @@ public class Question {
         this.answers = answers;
     }
 
-    public Question() {
-
-    }
+    public Question() {}
 
     public Question(String questionText) {
         this.questionText = questionText;

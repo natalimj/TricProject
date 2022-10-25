@@ -11,9 +11,13 @@ public class Answer {
 
     @Column(name = "text")
     private String answerText;
+
     @ManyToOne
     @JoinColumn(name="questionId", nullable=false)
     private Question question;
+
+    @OneToOne()
+    private AnswerCategory answerCategory;
 
     public Answer(int answerId, String answerText, Question question) {
         this.answerId = answerId;
