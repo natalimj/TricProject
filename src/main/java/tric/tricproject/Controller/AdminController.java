@@ -82,9 +82,12 @@ public class AdminController {
     @PostMapping("/addQuestion")
     public ResponseEntity<Question> addQuestion(@RequestParam("questionText") String questionText,
                                                 @RequestParam("firstAnswer") String firstAnswer,
-                                                @RequestParam("secondAnswer") String secondAnswer) {
+                                                @RequestParam("secondAnswer") String secondAnswer,
+                                                @RequestParam("theme") String theme,
+                                                @RequestParam("firstCategory") String firstCategory,
+                                                @RequestParam("secondCategory") String secondCategory) {
         try {
-            Question _question = questionService.addQuestion(questionText, firstAnswer, secondAnswer);
+            Question _question = questionService.addQuestion(questionText, firstAnswer, secondAnswer, theme, firstCategory,secondCategory);
             return new ResponseEntity<>(_question, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -95,9 +98,12 @@ public class AdminController {
     public ResponseEntity<Question> editQuestion(@RequestParam("questionText") String questionText,
                                                  @RequestParam("firstAnswer") String firstAnswer,
                                                  @RequestParam("secondAnswer") String secondAnswer,
-                                                 @RequestParam("questionId") long questionId) {
+                                                 @RequestParam("questionId") long questionId,
+                                                 @RequestParam("theme") String theme,
+                                                 @RequestParam("firstCategory") String firstCategory,
+                                                 @RequestParam("secondCategory") String secondCategory) {
         try {
-            Question _question = questionService.editQuestion(questionId, questionText, firstAnswer, secondAnswer);
+            Question _question = questionService.editQuestion(questionId, questionText, firstAnswer, secondAnswer, theme, firstCategory,secondCategory);
             return new ResponseEntity<>(_question, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

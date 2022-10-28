@@ -26,7 +26,8 @@ public class QuestionServiceImpl implements  QuestionService{
     static final String CATEGORY2 ="Progressive";
 
     @Override
-    public Question addQuestion(String questionText, String firstAnswerText, String secondAnswerText) {
+    public Question addQuestion(String questionText, String firstAnswerText, String secondAnswerText,
+                                String theme, String firstCategory,String secondCategory) {
 
         List<Answer> answers =new ArrayList<>();
         Question newQuestion = new Question(questionText);
@@ -58,7 +59,8 @@ public class QuestionServiceImpl implements  QuestionService{
     }
 
     @Override
-    public Question editQuestion(long questionId,String questionText,String firstAnswer, String secondAnswer){
+    public Question editQuestion(long questionId,String questionText,String firstAnswer, String secondAnswer,
+                                 String theme, String firstCategory,String secondCategory){
         Question question = questionRepository.findByQuestionId(questionId);
         question.setQuestionText(questionText);
         question.getAnswers().get(0).setAnswerText(firstAnswer);
@@ -123,16 +125,11 @@ public class QuestionServiceImpl implements  QuestionService{
     }
 
     @Override
-    public List<FinalResult> getFinalResults(long userId) {
-        List<FinalResult> finalResults = new ArrayList<>();
-
+    public FinalResult getFinalResults(long userId) {
         Random random = new Random();
-
         //TODO: get final result
-        finalResults.add(new FinalResult(CATEGORY1, (random.nextInt(10)+1)*10));
-        finalResults.add(new FinalResult(CATEGORY2, (random.nextInt(10)+1)*10));
-
-        return finalResults;
+        FinalResult finalResult = new FinalResult(CATEGORY1, CATEGORY2, (random.nextInt(10)+1)*10);
+        return finalResult;
     }
 
     public void updateQuestionNumbers(){

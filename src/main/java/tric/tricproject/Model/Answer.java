@@ -15,10 +15,14 @@ public class Answer {
     @JoinColumn(name="questionId", nullable=false)
     private Question question;
 
-    public Answer(int answerId, String answerText, Question question) {
+    @Column(name = "category")
+    private String category;
+
+    public Answer(int answerId, String answerText, Question question, String category) {
         this.answerId = answerId;
         this.answerText = answerText;
         this.question = question;
+        this.category = category ;
     }
     public Answer(String answerText, Question question) {
         this.answerText = answerText;
@@ -29,7 +33,6 @@ public class Answer {
         this.answerId = answerId;
         this.answerText = answerText;
     }
-
     public Answer() {
     }
 
@@ -53,5 +56,11 @@ public class Answer {
         this.answerText = answerText;
     }
 
+    public String getCategory() {
+        return category;
+    }
 
+    public void setCategory(String category) {
+        this.category = category;
+    }
 }
