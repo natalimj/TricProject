@@ -2,10 +2,10 @@ package tric.tricproject.Model;
 
 public class FinalResult {
 
-    private Category category;
+    private String category;
     private double rate;
 
-    public FinalResult(Category category, double rate) {
+    public FinalResult(String category, double rate) {
         this.category = category;
         this.rate = rate;
     }
@@ -13,11 +13,11 @@ public class FinalResult {
     public FinalResult() {
     }
 
-    public Category getCategory() {
+    public String getCategory() {
         return category;
     }
 
-    public void setCategory(Category category) {
+    public void setCategory(String category) {
         this.category = category;
     }
 
@@ -28,6 +28,4 @@ public class FinalResult {
     public void setRate(double rate) {
         this.rate = rate;
     }
-
-
 }

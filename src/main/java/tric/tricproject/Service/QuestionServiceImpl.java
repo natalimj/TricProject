@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class QuestionServiceImpl implements  QuestionService{
@@ -20,6 +21,10 @@ public class QuestionServiceImpl implements  QuestionService{
 
     @Autowired
     VoteRepository voteRepository;
+
+    static final String CATEGORY1 ="Conservative";
+    static final String CATEGORY2 ="Progressive";
+
     @Override
     public Question addQuestion(String questionText, String firstAnswerText, String secondAnswerText) {
 
@@ -115,6 +120,19 @@ public class QuestionServiceImpl implements  QuestionService{
     public void deleteAllQuestions() {
         answerRepository.deleteAll();
         questionRepository.deleteAll();
+    }
+
+    @Override
+    public List<FinalResult> getFinalResults(long userId) {
+        List<FinalResult> finalResults = new ArrayList<>();
+
+        Random random = new Random();
+
+        //TODO: get final result
+        finalResults.add(new FinalResult(CATEGORY1, (random.nextInt(10)+1)*10));
+        finalResults.add(new FinalResult(CATEGORY2, (random.nextInt(10)+1)*10));
+
+        return finalResults;
     }
 
     public void updateQuestionNumbers(){
