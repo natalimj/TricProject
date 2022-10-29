@@ -14,9 +14,13 @@ public class PlayInfo {
     @Column(name = "text")
     private String playInfoText;
 
-    public PlayInfo(long playInfoId, String playInfoText) {
+    @Column(name = "finalResultText")
+    private String finalResultText;
+
+    public PlayInfo(long playInfoId, String playInfoText, String finalResultText) {
         this.playInfoId = playInfoId;
         this.playInfoText = playInfoText;
+        this.finalResultText = finalResultText;
     }
 
     public PlayInfo() {
@@ -36,5 +40,13 @@ public class PlayInfo {
 
     public void setPlayInfoText(String playInfoText) {
         this.playInfoText = playInfoText;
+    }
+
+    public String getFinalResultText() {
+        return finalResultText;
+    }
+
+    public void setFinalResultText(String finalResultText) {
+        this.finalResultText = finalResultText;
     }
 }
