@@ -1,4 +1,4 @@
-package tric.tricproject.security.services;
+package tric.tricproject.Security.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

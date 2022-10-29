@@ -1,4 +1,4 @@
-package tric.tricproject.security.jwt;
+package tric.tricproject.Security.jwt;
 
 import java.io.IOException;
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package tric.tricproject.request;
+package tric.tricproject.Security.request;
 import java.util.Set;
 
 import javax.validation.constraints.*;

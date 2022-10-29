@@ -24,12 +24,12 @@ import tric.tricproject.Model.ERole;
 import tric.tricproject.Model.Role;
 import tric.tricproject.Repository.AdminRepository;
 import tric.tricproject.Repository.RoleRepository;
-import tric.tricproject.request.LoginRequest;
-import tric.tricproject.request.SignupRequest;
-import tric.tricproject.response.JwtResponse;
-import tric.tricproject.response.MessageResponse;
-import tric.tricproject.security.jwt.JwtUtils;
-import tric.tricproject.security.services.UserDetailsImpl;
+import tric.tricproject.Security.request.LoginRequest;
+import tric.tricproject.Security.request.SignupRequest;
+import tric.tricproject.Security.response.JwtResponse;
+import tric.tricproject.Security.response.MessageResponse;
+import tric.tricproject.Security.jwt.JwtUtils;
+import tric.tricproject.Security.services.UserDetailsImpl;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
