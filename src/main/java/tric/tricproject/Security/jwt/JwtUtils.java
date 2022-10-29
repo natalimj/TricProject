@@ -1,4 +1,4 @@
-package tric.tricproject.security.jwt;
+package tric.tricproject.Security.jwt;
 
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import tric.tricproject.security.services.UserDetailsImpl;
+import tric.tricproject.Security.services.UserDetailsImpl;
 
 import java.util.Date;
 
