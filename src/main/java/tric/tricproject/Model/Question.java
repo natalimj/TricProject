@@ -19,6 +19,9 @@ public class Question {
     @Column(name = "time")
     private int time;
 
+    @Column(name = "theme")
+    private String theme;
+
     @OneToMany(mappedBy="question",cascade={CascadeType.ALL})
     private List<Answer> answers=   new ArrayList<>();
 
@@ -32,11 +35,12 @@ public class Question {
         this.questionText = questionText;
     }
 
-    public Question(long questionId, int questionNumber, String questionText, int time, List<Answer> answers) {
+    public Question(long questionId, int questionNumber, String questionText, int time, String theme, List<Answer> answers) {
         this.questionId = questionId;
         this.questionNumber = questionNumber;
         this.questionText = questionText;
         this.time = time;
+        this.theme = theme;
         this.answers = answers;
     }
 
@@ -85,5 +89,13 @@ public class Question {
 
     public void setTime(int time) {
         this.time = time;
+    }
+
+    public String getTheme() {
+        return theme;
+    }
+
+    public void setTheme(String theme) {
+        this.theme = theme;
     }
 }

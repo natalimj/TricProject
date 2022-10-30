@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class QuestionServiceImpl implements  QuestionService{
@@ -20,16 +21,22 @@ public class QuestionServiceImpl implements  QuestionService{
 
     @Autowired
     VoteRepository voteRepository;
+
+    static final String CATEGORY1 ="Conservative";
+    static final String CATEGORY2 ="Progressive";
+
     @Override
-    public Question addQuestion(String questionText, String firstAnswerText, String secondAnswerText) {
+    public Question addQuestion(String questionText, String firstAnswerText, String secondAnswerText,
+                                String theme, String firstCategory,String secondCategory) {
 
         List<Answer> answers =new ArrayList<>();
         Question newQuestion = new Question(questionText);
         newQuestion.setTime(30); // default time - 30 seconds
+        newQuestion.setTheme(theme);
         Question question = questionRepository.save(newQuestion);
 
-        Answer firstAnswer = new Answer(firstAnswerText, question);
-        Answer secondAnswer = new Answer(secondAnswerText, question);
+        Answer firstAnswer = new Answer(firstAnswerText, question, firstCategory);
+        Answer secondAnswer = new Answer(secondAnswerText, question,secondCategory);
         answerRepository.save(firstAnswer);
         answerRepository.save(secondAnswer);
         answers.add(firstAnswer);
@@ -53,11 +60,15 @@ public class QuestionServiceImpl implements  QuestionService{
     }
 
     @Override
-    public Question editQuestion(long questionId,String questionText,String firstAnswer, String secondAnswer){
+    public Question editQuestion(long questionId,String questionText,String firstAnswer, String secondAnswer,
+                                 String theme, String firstCategory,String secondCategory){
         Question question = questionRepository.findByQuestionId(questionId);
         question.setQuestionText(questionText);
+        question.setTheme(theme);
         question.getAnswers().get(0).setAnswerText(firstAnswer);
         question.getAnswers().get(1).setAnswerText(secondAnswer);
+        question.getAnswers().get(0).setCategory(firstCategory);
+        question.getAnswers().get(1).setCategory(secondCategory);
         return questionRepository.save(question);
     }
 
@@ -115,6 +126,14 @@ public class QuestionServiceImpl implements  QuestionService{
     public void deleteAllQuestions() {
         answerRepository.deleteAll();
         questionRepository.deleteAll();
+    }
+
+    @Override
+    public FinalResult getFinalResults(long userId) {
+        Random random = new Random();
+        //TODO: get final result
+        FinalResult finalResult = new FinalResult(CATEGORY1, CATEGORY2, (random.nextInt(10)+1)*10);
+        return finalResult;
     }
 
     public void updateQuestionNumbers(){
