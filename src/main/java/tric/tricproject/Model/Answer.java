@@ -24,9 +24,10 @@ public class Answer {
         this.question = question;
         this.category = category ;
     }
-    public Answer(String answerText, Question question) {
+    public Answer(String answerText, Question question, String category) {
         this.answerText = answerText;
         this.question = question;
+        this.category = category ;
     }
 
     public Answer(int answerId, String answerText) {
