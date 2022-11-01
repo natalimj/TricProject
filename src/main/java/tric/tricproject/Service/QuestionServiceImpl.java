@@ -27,7 +27,8 @@ public class QuestionServiceImpl implements  QuestionService{
 
     @Override
     public Question addQuestion(String questionText, String firstAnswerText, String secondAnswerText,
-                                String theme, String firstCategory,String secondCategory) {
+                                String theme, String firstCategory1,String secondCategory1,
+                                String firstCategory2,String secondCategory2) {
 
         List<Answer> answers =new ArrayList<>();
         Question newQuestion = new Question(questionText);
@@ -35,8 +36,8 @@ public class QuestionServiceImpl implements  QuestionService{
         newQuestion.setTheme(theme);
         Question question = questionRepository.save(newQuestion);
 
-        Answer firstAnswer = new Answer(firstAnswerText, question, firstCategory);
-        Answer secondAnswer = new Answer(secondAnswerText, question,secondCategory);
+        Answer firstAnswer = new Answer(firstAnswerText, question, firstCategory1,secondCategory1);
+        Answer secondAnswer = new Answer(secondAnswerText, question,firstCategory2,secondCategory2);
         answerRepository.save(firstAnswer);
         answerRepository.save(secondAnswer);
         answers.add(firstAnswer);
@@ -61,14 +62,17 @@ public class QuestionServiceImpl implements  QuestionService{
 
     @Override
     public Question editQuestion(long questionId,String questionText,String firstAnswer, String secondAnswer,
-                                 String theme, String firstCategory,String secondCategory){
+                                 String theme, String firstCategory1,String secondCategory1,
+                                 String firstCategory2,String secondCategory2){
         Question question = questionRepository.findByQuestionId(questionId);
         question.setQuestionText(questionText);
         question.setTheme(theme);
         question.getAnswers().get(0).setAnswerText(firstAnswer);
         question.getAnswers().get(1).setAnswerText(secondAnswer);
-        question.getAnswers().get(0).setCategory(firstCategory);
-        question.getAnswers().get(1).setCategory(secondCategory);
+        question.getAnswers().get(0).setCategory(firstCategory1);
+        question.getAnswers().get(0).setSecondCategory(secondCategory1);
+        question.getAnswers().get(1).setCategory(firstCategory2);
+        question.getAnswers().get(1).setSecondCategory(secondCategory2);
         return questionRepository.save(question);
     }
 

@@ -18,16 +18,21 @@ public class Answer {
     @Column(name = "category")
     private String category;
 
-    public Answer(int answerId, String answerText, Question question, String category) {
+    @Column(name = "secondCategory")
+    private String secondCategory;
+
+    public Answer(int answerId, String answerText, Question question, String category, String secondCategory) {
         this.answerId = answerId;
         this.answerText = answerText;
         this.question = question;
         this.category = category ;
+        this.secondCategory = secondCategory;
     }
-    public Answer(String answerText, Question question, String category) {
+    public Answer(String answerText, Question question, String category, String secondCategory) {
         this.answerText = answerText;
         this.question = question;
         this.category = category ;
+        this.secondCategory = secondCategory;
     }
 
     public Answer(int answerId, String answerText) {
@@ -63,5 +68,12 @@ public class Answer {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getSecondCategory() {
+        return secondCategory;
+    }
+    public void setSecondCategory(String secondCategory) {
+        this.secondCategory = secondCategory;
     }
 }

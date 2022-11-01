@@ -84,10 +84,12 @@ public class AdminController {
                                                 @RequestParam("firstAnswer") String firstAnswer,
                                                 @RequestParam("secondAnswer") String secondAnswer,
                                                 @RequestParam("theme") String theme,
-                                                @RequestParam("firstCategory") String firstCategory,
-                                                @RequestParam("secondCategory") String secondCategory) {
+                                                @RequestParam("firstCategory1") String firstCategory1,
+                                                @RequestParam("secondCategory1") String secondCategory1,
+                                                @RequestParam("firstCategory2") String firstCategory2,
+                                                @RequestParam("secondCategory2") String secondCategory2) {
         try {
-            Question _question = questionService.addQuestion(questionText, firstAnswer, secondAnswer, theme, firstCategory,secondCategory);
+            Question _question = questionService.addQuestion(questionText, firstAnswer, secondAnswer, theme, firstCategory1,secondCategory1,firstCategory2,secondCategory2);
             return new ResponseEntity<>(_question, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -100,10 +102,12 @@ public class AdminController {
                                                  @RequestParam("secondAnswer") String secondAnswer,
                                                  @RequestParam("questionId") long questionId,
                                                  @RequestParam("theme") String theme,
-                                                 @RequestParam("firstCategory") String firstCategory,
-                                                 @RequestParam("secondCategory") String secondCategory) {
+                                                 @RequestParam("firstCategory1") String firstCategory1,
+                                                 @RequestParam("secondCategory1") String secondCategory1,
+                                                 @RequestParam("firstCategory2") String firstCategory2,
+                                                 @RequestParam("secondCategory2") String secondCategory2) {
         try {
-            Question _question = questionService.editQuestion(questionId, questionText, firstAnswer, secondAnswer, theme, firstCategory,secondCategory);
+            Question _question = questionService.editQuestion(questionId, questionText, firstAnswer, secondAnswer, theme, firstCategory1,secondCategory1,firstCategory2,secondCategory2);
             return new ResponseEntity<>(_question, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
