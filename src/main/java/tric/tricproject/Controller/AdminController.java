@@ -78,42 +78,25 @@ public class AdminController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
     @PostMapping("/addQuestion")
-    public ResponseEntity<Question> addQuestion(@RequestParam("questionText") String questionText,
-                                                @RequestParam("firstAnswer") String firstAnswer,
-                                                @RequestParam("secondAnswer") String secondAnswer,
-                                                @RequestParam("theme") String theme,
-                                                @RequestParam("firstCategory1") String firstCategory1,
-                                                @RequestParam("secondCategory1") String secondCategory1,
-                                                @RequestParam("firstCategory2") String firstCategory2,
-                                                @RequestParam("secondCategory2") String secondCategory2) {
+    public ResponseEntity<Question> addQuestion(@RequestBody Question question) {
         try {
-            Question _question = questionService.addQuestion(questionText, firstAnswer, secondAnswer, theme, firstCategory1,secondCategory1,firstCategory2,secondCategory2);
+            Question _question = questionService.addQuestion(question);
             return new ResponseEntity<>(_question, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
     @PatchMapping("/editQuestion")
-    public ResponseEntity<Question> editQuestion(@RequestParam("questionText") String questionText,
-                                                 @RequestParam("firstAnswer") String firstAnswer,
-                                                 @RequestParam("secondAnswer") String secondAnswer,
-                                                 @RequestParam("questionId") long questionId,
-                                                 @RequestParam("theme") String theme,
-                                                 @RequestParam("firstCategory1") String firstCategory1,
-                                                 @RequestParam("secondCategory1") String secondCategory1,
-                                                 @RequestParam("firstCategory2") String firstCategory2,
-                                                 @RequestParam("secondCategory2") String secondCategory2) {
+    public ResponseEntity<Question> editQuestion(@RequestBody Question question) {
+
         try {
-            Question _question = questionService.editQuestion(questionId, questionText, firstAnswer, secondAnswer, theme, firstCategory1,secondCategory1,firstCategory2,secondCategory2);
+            Question _question = questionService.editQuestion(question);
             return new ResponseEntity<>(_question, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
     @DeleteMapping(value = "/deleteQuestion")
     public ResponseEntity<Long> deleteQuestion(@RequestParam Long questionId) {
         try {
