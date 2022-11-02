@@ -8,11 +8,9 @@ import java.util.List;
 
 @Service
 public interface QuestionService {
-
-    Question addQuestion(String questionText, String firstAnswerText, String secondAnswerText, String theme, String firstCategory,String secondCategory);
+    
     void deleteQuestion(Question question);
     void deleteQuestionById(long questionId);
-    Question editQuestion(long questionId,String questionText,String firstAnswer, String secondAnswer, String theme, String firstCategory,String secondCategory);
     List<Question> getAllQuestions();
     Question getQuestionByNumber(int questionNumber);
     void updateQuestionNumbers();
@@ -21,4 +19,7 @@ public interface QuestionService {
     String getResultListJson();
     void deleteAllQuestions();
     FinalResult getFinalResults(long userId) ;
+    Question addQuestion(Question question);
+
+    Question editQuestion(Question question);
 }

@@ -44,6 +44,12 @@ public class Question {
         this.answers = answers;
     }
 
+    public Question(String questionText, int time, String theme) {
+        this.questionText = questionText;
+        this.time = time;
+        this.theme = theme;
+    }
+
     public Question() {
 
     }
@@ -97,5 +103,17 @@ public class Question {
 
     public void setTheme(String theme) {
         this.theme = theme;
+    }
+
+    @Override
+    public String toString() {
+        return "Question{" +
+                "questionId=" + questionId +
+                ", questionNumber=" + questionNumber +
+                ", questionText='" + questionText + '\'' +
+                ", time=" + time +
+                ", theme='" + theme + '\'' +
+                ", answers=" + answers +
+                '}';
     }
 }
