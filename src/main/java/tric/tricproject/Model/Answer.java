@@ -41,9 +41,11 @@ public class Answer {
         this.secondCategory = secondCategory;
     }
 
-    public Answer(int answerId, String answerText) {
+    public Answer(int answerId, String answerText, String firstCategory, String secondCategory) {
         this.answerId = answerId;
         this.answerText = answerText;
+        this.firstCategory = firstCategory ;
+        this.secondCategory = secondCategory;
     }
     public Answer() {
     }

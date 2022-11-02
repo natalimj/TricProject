@@ -43,6 +43,13 @@ public class Question {
         this.theme = theme;
         this.answers = answers;
     }
+    public Question(long questionId, int questionNumber, String questionText, int time, String theme) {
+        this.questionId = questionId;
+        this.questionNumber = questionNumber;
+        this.questionText = questionText;
+        this.time = time;
+        this.theme = theme;
+    }
 
     public Question(String questionText, int time, String theme) {
         this.questionText = questionText;
@@ -105,15 +112,4 @@ public class Question {
         this.theme = theme;
     }
 
-    @Override
-    public String toString() {
-        return "Question{" +
-                "questionId=" + questionId +
-                ", questionNumber=" + questionNumber +
-                ", questionText='" + questionText + '\'' +
-                ", time=" + time +
-                ", theme='" + theme + '\'' +
-                ", answers=" + answers +
-                '}';
-    }
 }
