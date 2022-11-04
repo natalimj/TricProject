@@ -1,6 +1,7 @@
 package tric.tricproject.Service;
 
 import com.google.gson.Gson;
+import tric.tricproject.Model.FinalCategory;
 import tric.tricproject.Model.*;
 import tric.tricproject.Repository.AnswerRepository;
 import tric.tricproject.Repository.QuestionRepository;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -24,6 +26,8 @@ public class QuestionServiceImpl implements  QuestionService{
 
     static final String CATEGORY1 ="Conservative";
     static final String CATEGORY2 ="Progressive";
+    static final String CATEGORY3 ="Pragmatic";
+    static final String CATEGORY4 ="Idealist";
 
     @Override
     public void deleteQuestion(Question questionToDelete) {
@@ -95,9 +99,40 @@ public class QuestionServiceImpl implements  QuestionService{
 
     @Override
     public FinalResult getFinalResults(long userId) {
-        Random random = new Random();
-        //TODO: get final result
-        FinalResult finalResult = new FinalResult(CATEGORY1, CATEGORY2, (random.nextInt(10)+1)*10);
+
+        List<FinalCategory> finalCategories = new ArrayList<>();
+        List<Vote> votes =voteRepository.findAllByUserId(userId);
+        for(Vote vote: votes){
+            Question question  = questionRepository.findByQuestionId(vote.getQuestionId()) ;
+            Answer answer = answerRepository.findByAnswerId(vote.getAnswerId());
+            FinalCategory finalCategory =new FinalCategory(question.getTheme(),answer.getFirstCategory(),
+                    answer.getSecondCategory());
+            finalCategories.add(finalCategory);
+        }
+
+        List<String> primaryCategories = new ArrayList<>();
+        List<String> secondaryCategories = new ArrayList<>();
+        for (FinalCategory finalCategory: finalCategories){
+            primaryCategories.add(finalCategory.getAnswerFirstCategory());
+            secondaryCategories.add(finalCategory.getAnswerSecondCategory());
+        }
+
+        double primaryCategory1 = Collections.frequency(primaryCategories, CATEGORY1);
+        double primaryCategory3 = Collections.frequency(primaryCategories, CATEGORY3);
+
+        double secondaryCategory1 = Collections.frequency(secondaryCategories, CATEGORY1)*0.5;
+        double secondaryCategory3 = Collections.frequency(secondaryCategories, CATEGORY3)*0.5;
+
+        double category1Rate =  ((primaryCategory1+secondaryCategory1)*100)/ votes.size();
+        double category3Rate =  ((primaryCategory3+secondaryCategory3)*100)/ votes.size();
+
+        List<CategoryRate> categoryRateList = new ArrayList<>();
+        CategoryRate c1 = new CategoryRate(CATEGORY1,CATEGORY2,category1Rate);
+        CategoryRate c2 = new CategoryRate(CATEGORY3,CATEGORY4,category3Rate);
+
+        categoryRateList.add((c1));
+        categoryRateList.add((c2));
+        FinalResult finalResult = new FinalResult(categoryRateList, finalCategories);
         return finalResult;
     }
 
