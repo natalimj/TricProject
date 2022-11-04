@@ -68,7 +68,7 @@ public class UserController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping("/result")  //TODO: maybe it can be only a service method - call with timer?
+    @GetMapping("/result")
     public ResponseEntity<Result> getResult(@RequestParam("questionId") long questionId) {
         try {
             Result result = questionService.getResult(questionId);
