@@ -1,6 +1,7 @@
 package tric.tricproject.Service;
 
 import com.google.gson.Gson;
+import tric.tricproject.Model.FinalCategory;
 import tric.tricproject.Model.*;
 import tric.tricproject.Repository.AnswerRepository;
 import tric.tricproject.Repository.QuestionRepository;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -24,28 +26,8 @@ public class QuestionServiceImpl implements  QuestionService{
 
     static final String CATEGORY1 ="Conservative";
     static final String CATEGORY2 ="Progressive";
-
-    @Override
-    public Question addQuestion(String questionText, String firstAnswerText, String secondAnswerText,
-                                String theme, String firstCategory,String secondCategory) {
-
-        List<Answer> answers =new ArrayList<>();
-        Question newQuestion = new Question(questionText);
-        newQuestion.setTime(30); // default time - 30 seconds
-        newQuestion.setTheme(theme);
-        Question question = questionRepository.save(newQuestion);
-
-        Answer firstAnswer = new Answer(firstAnswerText, question, firstCategory);
-        Answer secondAnswer = new Answer(secondAnswerText, question,secondCategory);
-        answerRepository.save(firstAnswer);
-        answerRepository.save(secondAnswer);
-        answers.add(firstAnswer);
-        answers.add(secondAnswer);
-        updateQuestionNumbers();
-        question = questionRepository.findByQuestionId(question.getQuestionId());
-        question.setAnswers(answers);
-        return  question;
-    }
+    static final String CATEGORY3 ="Pragmatic";
+    static final String CATEGORY4 ="Idealist";
 
     @Override
     public void deleteQuestion(Question questionToDelete) {
@@ -57,19 +39,6 @@ public class QuestionServiceImpl implements  QuestionService{
     public void deleteQuestionById(long questionId) {
         questionRepository.deleteById(questionId);
         updateQuestionNumbers();
-    }
-
-    @Override
-    public Question editQuestion(long questionId,String questionText,String firstAnswer, String secondAnswer,
-                                 String theme, String firstCategory,String secondCategory){
-        Question question = questionRepository.findByQuestionId(questionId);
-        question.setQuestionText(questionText);
-        question.setTheme(theme);
-        question.getAnswers().get(0).setAnswerText(firstAnswer);
-        question.getAnswers().get(1).setAnswerText(secondAnswer);
-        question.getAnswers().get(0).setCategory(firstCategory);
-        question.getAnswers().get(1).setCategory(secondCategory);
-        return questionRepository.save(question);
     }
 
     @Override
@@ -130,10 +99,80 @@ public class QuestionServiceImpl implements  QuestionService{
 
     @Override
     public FinalResult getFinalResults(long userId) {
-        Random random = new Random();
-        //TODO: get final result
-        FinalResult finalResult = new FinalResult(CATEGORY1, CATEGORY2, (random.nextInt(10)+1)*10);
+
+        List<FinalCategory> finalCategories = new ArrayList<>();
+        List<Vote> votes =voteRepository.findAllByUserId(userId);
+        for(Vote vote: votes){
+            Question question  = questionRepository.findByQuestionId(vote.getQuestionId()) ;
+            Answer answer = answerRepository.findByAnswerId(vote.getAnswerId());
+            FinalCategory finalCategory =new FinalCategory(question.getTheme(),answer.getFirstCategory(),
+                    answer.getSecondCategory());
+            finalCategories.add(finalCategory);
+        }
+
+        List<String> primaryCategories = new ArrayList<>();
+        List<String> secondaryCategories = new ArrayList<>();
+        for (FinalCategory finalCategory: finalCategories){
+            primaryCategories.add(finalCategory.getAnswerFirstCategory());
+            secondaryCategories.add(finalCategory.getAnswerSecondCategory());
+        }
+
+        double primaryCategory1 = Collections.frequency(primaryCategories, CATEGORY1);
+        double primaryCategory3 = Collections.frequency(primaryCategories, CATEGORY3);
+
+        double secondaryCategory1 = Collections.frequency(secondaryCategories, CATEGORY1)*0.5;
+        double secondaryCategory3 = Collections.frequency(secondaryCategories, CATEGORY3)*0.5;
+
+        double category1Rate =  ((primaryCategory1+secondaryCategory1)*100)/ votes.size();
+        double category3Rate =  ((primaryCategory3+secondaryCategory3)*100)/ votes.size();
+
+        List<CategoryRate> categoryRateList = new ArrayList<>();
+        CategoryRate c1 = new CategoryRate(CATEGORY1,CATEGORY2,category1Rate);
+        CategoryRate c2 = new CategoryRate(CATEGORY3,CATEGORY4,category3Rate);
+
+        categoryRateList.add((c1));
+        categoryRateList.add((c2));
+        FinalResult finalResult = new FinalResult(categoryRateList, finalCategories);
         return finalResult;
+    }
+
+    @Override
+    public Question addQuestion(Question _question) {
+
+        List<Answer> answers =new ArrayList<>();
+        Question question2 = new Question(_question.getQuestionText(),_question.getTime(),_question.getTheme());
+        Answer firstAnswer = new Answer(_question.getAnswers().get(0).getAnswerText(),
+                _question.getAnswers().get(0).getFirstCategory(),_question.getAnswers().get(0).getSecondCategory());
+        Answer secondAnswer = new Answer(_question.getAnswers().get(1).getAnswerText(),
+                _question.getAnswers().get(1).getFirstCategory(),_question.getAnswers().get(1).getSecondCategory());
+
+        answers.add(firstAnswer);
+        answers.add(secondAnswer);
+
+        Question question = questionRepository.save(question2);
+        updateQuestionNumbers();
+
+        firstAnswer.setQuestion(question);
+        secondAnswer.setQuestion(question);
+        answerRepository.save(firstAnswer);
+        answerRepository.save(secondAnswer);
+        question = questionRepository.findByQuestionId(question.getQuestionId());
+        question.setAnswers(answers);
+        return  question;
+    }
+
+    @Override
+    public Question editQuestion(Question _question) {
+        Question question = questionRepository.findByQuestionId(_question.getQuestionId());
+        question.setQuestionText(_question.getQuestionText());
+        question.setTheme(_question.getTheme());
+        question.getAnswers().get(0).setAnswerText(_question.getAnswers().get(0).getAnswerText());
+        question.getAnswers().get(1).setAnswerText(_question.getAnswers().get(1).getAnswerText());
+        question.getAnswers().get(0).setFirstCategory(_question.getAnswers().get(0).getFirstCategory());
+        question.getAnswers().get(0).setSecondCategory(_question.getAnswers().get(0).getSecondCategory());
+        question.getAnswers().get(1).setFirstCategory(_question.getAnswers().get(1).getFirstCategory());
+        question.getAnswers().get(1).setSecondCategory(_question.getAnswers().get(1).getSecondCategory());
+        return questionRepository.save(question);
     }
 
     public void updateQuestionNumbers(){
