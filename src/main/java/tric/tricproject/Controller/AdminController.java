@@ -226,6 +226,17 @@ public class AdminController {
         }
     }
 
+    @GetMapping("/displayQuestion")
+    public ResponseEntity<Question> displayQuestion(@RequestParam("questionNumber") int questionNumber) {
+        try {
+            Question question = questionService.getQuestionByNumber(questionNumber);
+            template.convertAndSend("/topic/question", question);
+            return new ResponseEntity<>(question, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }
 
 
