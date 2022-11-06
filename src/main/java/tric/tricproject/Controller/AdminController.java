@@ -165,17 +165,6 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/numberOfQuestions")
-    public ResponseEntity<Integer> getNumberOfQuestions() {
-        try {
-            int numberOfQuestions = questionService.getAllQuestions().size();
-            return new ResponseEntity<>(numberOfQuestions , HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-
     @PostMapping("/contributor")
     public ResponseEntity<Contributor> addContributor(@RequestBody Contributor contributor) {
         try {

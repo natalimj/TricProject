@@ -108,12 +108,21 @@ public class UserController {
         }
     }
 
-
     @GetMapping("/getPlayInfo")
     public ResponseEntity<PlayInfo> getPlayInfo() {
         try {
             PlayInfo playInfo = playInfoService.getPlayInfo();
             return new ResponseEntity<>(playInfo, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/numberOfQuestions")
+    public ResponseEntity<Integer> getNumberOfQuestions() {
+        try {
+            int numberOfQuestions = questionService.getAllQuestions().size();
+            return new ResponseEntity<>(numberOfQuestions , HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
