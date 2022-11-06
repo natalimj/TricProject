@@ -20,6 +20,6 @@ public interface QuestionService {
     void deleteAllQuestions();
     FinalResult getFinalResults(long userId) ;
     Question addQuestion(Question question);
-
     Question editQuestion(Question question);
+    int getPredictedAnswer(long userId) ;
 }
