@@ -230,7 +230,7 @@ public class AdminController {
     public ResponseEntity<Question> displayQuestion(@RequestParam("questionNumber") int questionNumber) {
         try {
             Question question = questionService.getQuestionByNumber(questionNumber);
-            template.convertAndSend("/topic/question", question);
+            template.convertAndSend("/topic/adminQuestion", question);
             return new ResponseEntity<>(question, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
