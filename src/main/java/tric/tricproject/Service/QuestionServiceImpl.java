@@ -120,8 +120,8 @@ public class QuestionServiceImpl implements  QuestionService{
         double primaryCategory1 = Collections.frequency(primaryCategories, CATEGORY1);
         double primaryCategory3 = Collections.frequency(primaryCategories, CATEGORY3);
 
-        double secondaryCategory1 = Collections.frequency(secondaryCategories, CATEGORY1)*0.5;
-        double secondaryCategory3 = Collections.frequency(secondaryCategories, CATEGORY3)*0.5;
+        double secondaryCategory1 = Collections.frequency(secondaryCategories, CATEGORY1);
+        double secondaryCategory3 = Collections.frequency(secondaryCategories, CATEGORY3);
 
         double category1Rate =  ((primaryCategory1+secondaryCategory1)*100)/ votes.size();
         double category3Rate =  ((primaryCategory3+secondaryCategory3)*100)/ votes.size();
