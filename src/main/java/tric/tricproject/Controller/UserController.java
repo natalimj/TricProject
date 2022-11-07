@@ -127,4 +127,14 @@ public class UserController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/predictedAnswer")
+    public ResponseEntity<Integer> getPredictedAnswer(@RequestParam("userId") long userId) {
+        try {
+            int predictedAnswerNumber = questionService.getPredictedAnswer(userId);
+            return new ResponseEntity<>(predictedAnswerNumber , HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
