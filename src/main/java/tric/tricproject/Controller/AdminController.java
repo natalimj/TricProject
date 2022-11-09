@@ -47,19 +47,9 @@ public class AdminController {
             userService.deleteAllUsers();
             voteService.deleteAllVotes();
             statusService.setAppStatus(false);
-            //TODO: prediction service delete the predictions
+            predictionService.clearPredictions();
             template.convertAndSend("/topic/status", false);
             return new ResponseEntity<>(resultJson, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @GetMapping("/users")
-    public ResponseEntity<List<User>> getAllUsers() {
-        try {
-            List<User> users = userService.getAllUsers();
-            return new ResponseEntity<>(users, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -70,7 +60,7 @@ public class AdminController {
         try {
             Question question = questionService.getQuestionByNumber(questionNumber);
             if (question != null) {
-                int numberOfQuestions = questionService.getAllQuestions().size();
+                int numberOfQuestions = questionService.getNumberOfQuestions();
                 if (questionNumber == numberOfQuestions) {
                     predictionService.generatePredictions(numberOfQuestions - 1);
                 }

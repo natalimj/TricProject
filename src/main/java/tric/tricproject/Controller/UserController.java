@@ -126,8 +126,8 @@ public class UserController {
     @GetMapping("/predictedAnswer")
     public ResponseEntity<Integer> getPredictedAnswer(@RequestParam("userId") long userId) {
         try {
-            //int predictedAnswerNumber = questionService.getPredictedAnswer(userId);
-            int predictedAnswerNumber = predictionService.getPredictionForUser(userId);
+            int predictedAnswerNumber = predictionService.werePredictionsGenerated()
+                    ? predictionService.getPredictionForUser(userId) : questionService.getPredictedAnswer(userId);
             return new ResponseEntity<>(predictedAnswerNumber, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

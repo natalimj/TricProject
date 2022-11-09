@@ -11,6 +11,7 @@ import tric.tricproject.Repository.VoteRepository;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import weka.clusterers.HierarchicalClusterer;
 import weka.core.*;
@@ -36,7 +37,7 @@ public class PredictionServiceImpl implements PredictionService {
             List<Vote> userVotes = new ArrayList<>();
             userVotes = voteRepository.findAllByUserId(users.get(i).getUserId());
             for (int j = 0; j < userVotes.size(); j++) {
-                votes[i][j] = answerRepository.findByAnswerId(userVotes.get(j).getAnswerId()).getAnswerText().equals("Yes") ? 0 : 1;
+                votes[i][j] = answerRepository.findByAnswerId(userVotes.get(j).getAnswerId()).getAnswerText().equalsIgnoreCase("Yes") ? 0 : 1;
             }
         }
 
@@ -63,12 +64,22 @@ public class PredictionServiceImpl implements PredictionService {
         return userPredictions.getOrDefault(userId, 0);
     }
 
+    @Override
+    public void clearPredictions() {
+        userPredictions.clear();
+    }
+
+    @Override
+    public boolean werePredictionsGenerated() {
+        return userPredictions.size() > 0;
+    }
+
     private static Instances loadForHierarchical(int[][] data, int numberOfQuestions) {
         ArrayList<Attribute> attributes = new ArrayList<Attribute>();
         //attributes.add(new Attribute("Vote1"));
         //attributes.add(new Attribute("Vote2"));
         for (int i = 1; i <= numberOfQuestions; i++) {
-            attributes.add(new Attribute("Vote"+i));
+            attributes.add(new Attribute("Vote" + i));
         }
         Instances dataset = new Instances("Dataset", attributes, data.length);
         for (int[] datum : data) {
