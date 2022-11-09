@@ -116,7 +116,7 @@ public class UserController {
     @GetMapping("/numberOfQuestions")
     public ResponseEntity<Integer> getNumberOfQuestions() {
         try {
-            int numberOfQuestions = questionService.getAllQuestions().size();
+            int numberOfQuestions = questionService.getNumberOfQuestions();
             return new ResponseEntity<>(numberOfQuestions, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
