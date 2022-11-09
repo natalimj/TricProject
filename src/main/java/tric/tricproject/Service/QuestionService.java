@@ -22,4 +22,5 @@ public interface QuestionService {
     Question addQuestion(Question question);
     Question editQuestion(Question question);
     int getPredictedAnswer(long userId) ;
+    int getNumberOfQuestions();
 }

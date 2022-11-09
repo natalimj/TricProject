@@ -251,8 +251,27 @@ public class AdminController {
     @GetMapping("/numberOfQuestions")
     public ResponseEntity<Integer> getNumberOfQuestions() {
         try {
-            int numberOfQuestions = questionService.getAllQuestions().size();
-            return new ResponseEntity<>(numberOfQuestions, HttpStatus.OK);
+            int numberOfQuestions = questionService.getNumberOfQuestions();
+            return new ResponseEntity<>(numberOfQuestions , HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> getAllUsers() {
+        try {
+            List<User> users = userService.getAllUsers();
+            return new ResponseEntity<>(users, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @GetMapping("/startCountdown")
+    public ResponseEntity<Integer> startCountdown(@RequestParam("timer") int timer) {
+        try {
+            template.convertAndSend("/topic/timer", timer);
+            return new ResponseEntity<>(timer, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
