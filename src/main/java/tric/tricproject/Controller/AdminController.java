@@ -235,6 +235,16 @@ public class AdminController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/startCountdown")
+    public ResponseEntity<Integer> startCountdown(@RequestParam("timer") int timer) {
+        try {
+            template.convertAndSend("/topic/timer", timer);
+            return new ResponseEntity<>(timer, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
 
 
