@@ -24,22 +24,24 @@ public class UserController {
     SimpMessagingTemplate template;
     @Autowired
     QuestionService questionService;
-
     @Autowired
     PlayInfoService playInfoService;
-
     @Autowired
     ContributorService contributorService;
+    @Autowired
+    PredictionService predictionService;
+
     @PostMapping("/user")
     public ResponseEntity<User> createUser(@RequestBody User user) {
         try {
             User _user = userService.addUser(user);
-            template.convertAndSend("/topic/message",userService.getAllUsers().size());
+            template.convertAndSend("/topic/message", userService.getAllUsers().size());
             return new ResponseEntity<>(_user, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @PostMapping("/vote")
     public ResponseEntity<Vote> addVote(@RequestBody Vote vote) {
         try {
@@ -49,6 +51,7 @@ public class UserController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @GetMapping("/getAppStatus")
     public ResponseEntity<Boolean> getAppStatus() {
         try {
@@ -58,6 +61,7 @@ public class UserController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @GetMapping("/result")
     public ResponseEntity<Result> getResult(@RequestParam("questionId") long questionId) {
         try {
@@ -68,11 +72,12 @@ public class UserController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @GetMapping("/finalResult")
     public ResponseEntity<FinalResult> getFinalResult(@RequestParam("userId") long userId) {
         try {
             FinalResult finalResult = questionService.getFinalResults(userId);
-            return new ResponseEntity<>(finalResult , HttpStatus.OK);
+            return new ResponseEntity<>(finalResult, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -111,8 +116,8 @@ public class UserController {
     @GetMapping("/numberOfQuestions")
     public ResponseEntity<Integer> getNumberOfQuestions() {
         try {
-            int numberOfQuestions = questionService.getAllQuestions().size();
-            return new ResponseEntity<>(numberOfQuestions , HttpStatus.OK);
+            int numberOfQuestions = questionService.getNumberOfQuestions();
+            return new ResponseEntity<>(numberOfQuestions, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -121,8 +126,9 @@ public class UserController {
     @GetMapping("/predictedAnswer")
     public ResponseEntity<Integer> getPredictedAnswer(@RequestParam("userId") long userId) {
         try {
-            int predictedAnswerNumber = questionService.getPredictedAnswer(userId);
-            return new ResponseEntity<>(predictedAnswerNumber , HttpStatus.OK);
+            int predictedAnswerNumber = predictionService.werePredictionsGenerated()
+                    ? predictionService.getPredictionForUser(userId) : questionService.getPredictedAnswer(userId);
+            return new ResponseEntity<>(predictedAnswerNumber, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
