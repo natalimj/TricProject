@@ -208,6 +208,11 @@ public class QuestionServiceImpl implements QuestionService {
         }
     }
 
+    @Override
+    public int getNumberOfQuestions() {
+        return (int) questionRepository.count();
+    }
+
     public void updateQuestionNumbers() {
         List<Question> questions = questionRepository.findAllByOrderByQuestionIdAsc();
         for (int i = 0; i < questions.size(); i++) {
