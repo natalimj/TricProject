@@ -210,7 +210,8 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public int getNumberOfQuestions() {
-        return (int) questionRepository.count();
+        Long number = questionRepository.count();
+        return  number.intValue();
     }
 
     public void updateQuestionNumbers() {
