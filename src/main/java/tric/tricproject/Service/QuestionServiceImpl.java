@@ -131,8 +131,7 @@ public class QuestionServiceImpl implements QuestionService {
 
         categoryRateList.add((c1));
         categoryRateList.add((c2));
-        FinalResult finalResult = new FinalResult(categoryRateList, finalCategories);
-        return finalResult;
+        return new FinalResult(categoryRateList, finalCategories);
     }
 
     @Override
@@ -192,7 +191,7 @@ public class QuestionServiceImpl implements QuestionService {
         weightedCategories.put(CATEGORY3, Collections.frequency(primaryCategories, CATEGORY3) + (Collections.frequency(secondaryCategories, CATEGORY3) * 0.5));
         weightedCategories.put(CATEGORY4, Collections.frequency(primaryCategories, CATEGORY4) + (Collections.frequency(secondaryCategories, CATEGORY4) * 0.5));
 
-        Question finalQuestion = questionRepository.findByQuestionNumber(getAllQuestions().size());
+        Question finalQuestion = questionRepository.findByQuestionNumber(getNumberOfQuestions());
         if (weightedCategories.get(finalQuestion.getAnswers().get(0).getFirstCategory()) > weightedCategories.get(finalQuestion.getAnswers().get(1).getFirstCategory())) {
             return 0;
         } else if (weightedCategories.get(finalQuestion.getAnswers().get(0).getFirstCategory()) < weightedCategories.get(finalQuestion.getAnswers().get(1).getFirstCategory())) {
@@ -203,7 +202,11 @@ public class QuestionServiceImpl implements QuestionService {
             } else if (weightedCategories.get(finalQuestion.getAnswers().get(0).getSecondCategory()) < weightedCategories.get(finalQuestion.getAnswers().get(1).getSecondCategory())) {
                 return 1;
             } else {
-                return 0;
+                Question secondToLastQuestion = questionRepository.findByQuestionNumber(getNumberOfQuestions()-1);
+                if(secondToLastQuestion.getAnswers().get(0).getFirstCategory().equals(finalQuestion.getAnswers().get(0).getFirstCategory())){
+                    return 0;
+                }
+                return 1;
             }
         }
     }
