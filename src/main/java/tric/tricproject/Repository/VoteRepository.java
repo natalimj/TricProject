@@ -14,4 +14,6 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
 
     @Query
     List<Vote> findAllByQuestionId(long questionId);
+
+    List<Vote> findAllByUserId(long questionId);
 }

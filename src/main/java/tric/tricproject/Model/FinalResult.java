@@ -1,33 +1,32 @@
 package tric.tricproject.Model;
 
+import java.util.List;
+
 public class FinalResult {
 
-    private Category category;
-    private double rate;
+    private List<CategoryRate> categoryRateList;
+    private List<FinalCategory> finalCategoryList;
 
-    public FinalResult(Category category, double rate) {
-        this.category = category;
-        this.rate = rate;
+
+    public FinalResult(List<CategoryRate> categoryRateList, List<FinalCategory> finalCategoryList) {
+        this.categoryRateList = categoryRateList;
+        this.finalCategoryList = finalCategoryList;
     }
 
-    public FinalResult() {
+    public List<CategoryRate> getCategoryRateList() {
+        return categoryRateList;
     }
 
-    public Category getCategory() {
-        return category;
+    public void setCategoryRateList(List<CategoryRate> categoryRateList) {
+        this.categoryRateList = categoryRateList;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public List<FinalCategory> getFinalCategoryList() {
+        return finalCategoryList;
     }
 
-    public double getRate() {
-        return rate;
+    public void setFinalCategoryList(List<FinalCategory> finalCategoryList) {
+        this.finalCategoryList = finalCategoryList;
     }
-
-    public void setRate(double rate) {
-        this.rate = rate;
-    }
-
 
 }

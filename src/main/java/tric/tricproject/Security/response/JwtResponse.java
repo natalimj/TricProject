@@ -1,4 +1,4 @@
-package tric.tricproject.response;
+package tric.tricproject.Security.response;
 
 import java.util.List;
 

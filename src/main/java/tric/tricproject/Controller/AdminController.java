@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import tric.tricproject.Model.*;
 import tric.tricproject.Service.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 @CrossOrigin
@@ -19,30 +20,28 @@ public class AdminController {
     UserService userService;
     @Autowired
     VoteService voteService;
-
     @Autowired
     QuestionService questionService;
-
     @Autowired
     StatusService statusService;
-
     @Autowired
     ContributorService contributorService;
-
     @Autowired
     PlayInfoService playInfoService;
-
+    @Autowired
+    PredictionService predictionService;
     @Autowired
     SimpMessagingTemplate template;
 
     @GetMapping("/endSession")
     public ResponseEntity<String> endSession() {
         try {
-            String resultJson =questionService.getResultListJson();
+            String resultJson = questionService.getResultListJson();
             //delete all users and votes
             userService.deleteAllUsers();
             voteService.deleteAllVotes();
             statusService.setAppStatus(false);
+            predictionService.clearPredictions();
             template.convertAndSend("/topic/status", false);
             return new ResponseEntity<>(resultJson, HttpStatus.OK);
         } catch (Exception e) {
@@ -55,6 +54,10 @@ public class AdminController {
         try {
             Question question = questionService.getQuestionByNumber(questionNumber);
             if (question != null) {
+                int numberOfQuestions = questionService.getNumberOfQuestions();
+                if (questionNumber == numberOfQuestions) {
+                    predictionService.generatePredictions(numberOfQuestions - 1);
+                }
                 return new ResponseEntity<>(question, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -80,11 +83,9 @@ public class AdminController {
     }
 
     @PostMapping("/addQuestion")
-    public ResponseEntity<Question> addQuestion(@RequestParam("questionText") String questionText,
-                                                @RequestParam("firstAnswer") String firstAnswer,
-                                                @RequestParam("secondAnswer") String secondAnswer) {
+    public ResponseEntity<Question> addQuestion(@RequestBody Question question) {
         try {
-            Question _question = questionService.addQuestion(questionText, firstAnswer, secondAnswer);
+            Question _question = questionService.addQuestion(question);
             return new ResponseEntity<>(_question, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -92,12 +93,10 @@ public class AdminController {
     }
 
     @PatchMapping("/editQuestion")
-    public ResponseEntity<Question> editQuestion(@RequestParam("questionText") String questionText,
-                                                 @RequestParam("firstAnswer") String firstAnswer,
-                                                 @RequestParam("secondAnswer") String secondAnswer,
-                                                 @RequestParam("questionId") long questionId) {
+    public ResponseEntity<Question> editQuestion(@RequestBody Question question) {
+
         try {
-            Question _question = questionService.editQuestion(questionId, questionText, firstAnswer, secondAnswer);
+            Question _question = questionService.editQuestion(question);
             return new ResponseEntity<>(_question, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -138,7 +137,7 @@ public class AdminController {
     public ResponseEntity<Status> setActive() {
         try {
             Status status = statusService.setAppStatus(true);
-            template.convertAndSend("/topic/status",true);
+            template.convertAndSend("/topic/status", true);
             return new ResponseEntity<>(status, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -149,7 +148,7 @@ public class AdminController {
     public ResponseEntity<Status> setInactive() {
         try {
             Status status = statusService.setAppStatus(false);
-            template.convertAndSend("/topic/status",false);
+            template.convertAndSend("/topic/status", false);
             return new ResponseEntity<>(status, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -165,23 +164,12 @@ public class AdminController {
     @PostMapping("/addQuestionTime")
     public ResponseEntity<Question> addQuestionTime(@RequestParam("questionId") long questionId, @RequestParam("time") int time) {
         try {
-            Question _question = questionService.addQuestionTime(questionId,time);
+            Question _question = questionService.addQuestionTime(questionId, time);
             return new ResponseEntity<>(_question, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    @GetMapping("/numberOfQuestions")
-    public ResponseEntity<Integer> getNumberOfQuestions() {
-        try {
-            int numberOfQuestions = questionService.getAllQuestions().size();
-            return new ResponseEntity<>(numberOfQuestions , HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
 
     @PostMapping("/contributor")
     public ResponseEntity<Contributor> addContributor(@RequestBody Contributor contributor) {
@@ -233,6 +221,45 @@ public class AdminController {
         }
     }
 
+    @GetMapping("/displayQuestion")
+    public ResponseEntity<Question> displayQuestion(@RequestParam("questionNumber") int questionNumber) {
+        try {
+            Question question = questionService.getQuestionByNumber(questionNumber);
+            template.convertAndSend("/topic/adminQuestion", question);
+            return new ResponseEntity<>(question, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/numberOfQuestions")
+    public ResponseEntity<Integer> getNumberOfQuestions() {
+        try {
+            int numberOfQuestions = questionService.getNumberOfQuestions();
+            return new ResponseEntity<>(numberOfQuestions , HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> getAllUsers() {
+        try {
+            List<User> users = userService.getAllUsers();
+            return new ResponseEntity<>(users, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @GetMapping("/startCountdown")
+    public ResponseEntity<Integer> startCountdown(@RequestParam("timer") int timer) {
+        try {
+            template.convertAndSend("/topic/timer", timer);
+            return new ResponseEntity<>(timer, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
 
 

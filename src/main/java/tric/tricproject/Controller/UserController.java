@@ -19,39 +19,29 @@ public class UserController {
     @Autowired
     VoteService voteService;
     @Autowired
-    CategoryService categoryService;
-    @Autowired
     StatusService statusService;
     @Autowired
     SimpMessagingTemplate template;
     @Autowired
     QuestionService questionService;
-
     @Autowired
     PlayInfoService playInfoService;
-
     @Autowired
     ContributorService contributorService;
+    @Autowired
+    PredictionService predictionService;
 
-    @GetMapping("/users")
-    public ResponseEntity<List<User>> getAllUsers() {
-        try {
-            List<User> users = userService.getAllUsers();
-            return new ResponseEntity<>(users, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
     @PostMapping("/user")
     public ResponseEntity<User> createUser(@RequestBody User user) {
         try {
             User _user = userService.addUser(user);
-            template.convertAndSend("/topic/message",userService.getAllUsers().size());
+            template.convertAndSend("/topic/message", userService.getAllUsers().size());
             return new ResponseEntity<>(_user, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @PostMapping("/vote")
     public ResponseEntity<Vote> addVote(@RequestBody Vote vote) {
         try {
@@ -61,6 +51,7 @@ public class UserController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @GetMapping("/getAppStatus")
     public ResponseEntity<Boolean> getAppStatus() {
         try {
@@ -70,7 +61,8 @@ public class UserController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping("/result")  //TODO: maybe it can be only a service method - call with timer?
+
+    @GetMapping("/result")
     public ResponseEntity<Result> getResult(@RequestParam("questionId") long questionId) {
         try {
             Result result = questionService.getResult(questionId);
@@ -80,12 +72,12 @@ public class UserController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @GetMapping("/finalResult")
-    public ResponseEntity<List<FinalResult>> getFinalResult(@RequestParam("userId") long userId) {
+    public ResponseEntity<FinalResult> getFinalResult(@RequestParam("userId") long userId) {
         try {
-            List<Category> categories = categoryService.getAllCategories();
-            List<FinalResult> finalResults = categoryService.getFinalResults(userId, categories);
-            return new ResponseEntity<>(finalResults , HttpStatus.OK);
+            FinalResult finalResult = questionService.getFinalResults(userId);
+            return new ResponseEntity<>(finalResult, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -111,12 +103,32 @@ public class UserController {
         }
     }
 
-
     @GetMapping("/getPlayInfo")
     public ResponseEntity<PlayInfo> getPlayInfo() {
         try {
             PlayInfo playInfo = playInfoService.getPlayInfo();
             return new ResponseEntity<>(playInfo, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/numberOfQuestions")
+    public ResponseEntity<Integer> getNumberOfQuestions() {
+        try {
+            int numberOfQuestions = questionService.getNumberOfQuestions();
+            return new ResponseEntity<>(numberOfQuestions, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/predictedAnswer")
+    public ResponseEntity<Integer> getPredictedAnswer(@RequestParam("userId") long userId) {
+        try {
+            int predictedAnswerNumber = predictionService.werePredictionsGenerated()
+                    ? predictionService.getPredictionForUser(userId) : questionService.getPredictedAnswer(userId);
+            return new ResponseEntity<>(predictedAnswerNumber, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -1,4 +1,4 @@
-package tric.tricproject.response;
+package tric.tricproject.Security.response;
 
 public class MessageResponse {
 	private String message;

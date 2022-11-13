@@ -15,21 +15,38 @@ public class Answer {
     @JoinColumn(name="questionId", nullable=false)
     private Question question;
 
-    public Answer(int answerId, String answerText, Question question) {
+    @Column(name = "firstCategory")
+    private String firstCategory;
+
+    @Column(name = "secondCategory")
+    private String secondCategory;
+
+    public Answer(int answerId, String answerText, Question question, String firstCategory, String secondCategory) {
         this.answerId = answerId;
         this.answerText = answerText;
         this.question = question;
+        this.firstCategory = firstCategory ;
+        this.secondCategory = secondCategory;
     }
-    public Answer(String answerText, Question question) {
+
+    public Answer( String answerText,  String firstCategory, String secondCategory) {
+        this.answerText = answerText;
+        this.firstCategory = firstCategory ;
+        this.secondCategory = secondCategory;
+    }
+    public Answer(String answerText, Question question, String firstCategory, String secondCategory) {
         this.answerText = answerText;
         this.question = question;
+        this.firstCategory = firstCategory ;
+        this.secondCategory = secondCategory;
     }
 
-    public Answer(int answerId, String answerText) {
+    public Answer(int answerId, String answerText, String firstCategory, String secondCategory) {
         this.answerId = answerId;
         this.answerText = answerText;
+        this.firstCategory = firstCategory ;
+        this.secondCategory = secondCategory;
     }
-
     public Answer() {
     }
 
@@ -53,5 +70,22 @@ public class Answer {
         this.answerText = answerText;
     }
 
+    public String getFirstCategory() {
+        return firstCategory;
+    }
 
+    public void setFirstCategory(String firstCategory) {
+        this.firstCategory = firstCategory;
+    }
+
+    public String getSecondCategory() {
+        return secondCategory;
+    }
+    public void setSecondCategory(String secondCategory) {
+        this.secondCategory = secondCategory;
+    }
+
+    public void setQuestion(Question question) {
+        this.question = question;
+    }
 }
