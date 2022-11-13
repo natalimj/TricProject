@@ -20,22 +20,16 @@ public class AdminController {
     UserService userService;
     @Autowired
     VoteService voteService;
-
     @Autowired
     QuestionService questionService;
-
     @Autowired
     StatusService statusService;
-
     @Autowired
     ContributorService contributorService;
-
     @Autowired
     PlayInfoService playInfoService;
-
     @Autowired
     PredictionService predictionService;
-
     @Autowired
     SimpMessagingTemplate template;
 
