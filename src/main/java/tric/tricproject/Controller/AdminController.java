@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import tric.tricproject.Model.*;
 import tric.tricproject.Service.*;
 
-import java.util.HashMap;
 import java.util.List;
 
 @CrossOrigin
@@ -50,7 +49,7 @@ public class AdminController {
     }
 
     @GetMapping("/question")
-    public ResponseEntity<Question> getQuestion(@RequestParam("questionNumber") int questionNumber) {
+    public ResponseEntity getQuestion(@RequestParam("questionNumber") int questionNumber) {
         try {
             Question question = questionService.getQuestionByNumber(questionNumber);
             if (question != null) {
@@ -63,7 +62,7 @@ public class AdminController {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
