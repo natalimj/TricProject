@@ -27,8 +27,6 @@ public class PredictionServiceImpl implements PredictionService {
     UserRepository userRepository;
     @Autowired
     AnswerRepository answerRepository;
-    @Autowired
-    QuestionService questionService;
 
     @Override
     public void generatePredictions(int numberOfQuestions) {
@@ -58,7 +56,7 @@ public class PredictionServiceImpl implements PredictionService {
 
     @Override
     public int getPredictionForUser(long userId) {
-        return userPredictions.getOrDefault(userId, questionService.getPredictedAnswer(userId));
+        return userPredictions.getOrDefault(userId, 0);
     }
 
     @Override
