@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import tric.tricproject.Model.*;
 import tric.tricproject.Service.*;
 
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 
 @CrossOrigin
