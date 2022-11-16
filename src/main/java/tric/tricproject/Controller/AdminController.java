@@ -259,6 +259,15 @@ public class AdminController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @PostMapping("/cleanResultPage")
+    public ResponseEntity cleanResultPage() {
+        try {
+            template.convertAndSend("/topic/cleanPage",true);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
 
 
