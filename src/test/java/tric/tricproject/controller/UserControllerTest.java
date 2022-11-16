@@ -22,7 +22,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -35,30 +34,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(UserController.class)
 public class UserControllerTest {
-
     @MockBean
     UserService userService;
     @MockBean
     VoteService voteService;
     @MockBean
-    CategoryService categoryService;
-    @MockBean
     StatusService statusService;
-
     @MockBean
     QuestionService questionService;
-
     @MockBean
     PlayInfoService playInfoService;
-
     @MockBean
     ContributorService contributorService;
     @MockBean
+    PredictionService predictionService;
+    @MockBean
     SimpMessagingTemplate template;
-
     @Autowired
     private MockMvc mockMvc;
-
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -74,55 +67,15 @@ public class UserControllerTest {
     }
 
     @Test
-    void shouldReturnListOfUsers() throws Exception {
-        List<User> users= new ArrayList<>(
-                Arrays.asList(new User(1, "TricUser","/image.jpg"),
-                        new User(2, "TricUser2","/image2.jpg"),
-                        new User(3, "TricUser3","/image3.jpg")));
-
-        when(userService.getAllUsers()).thenReturn(users);
-        mockMvc.perform(get("/userApi/users"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()").value(users.size()))
-                .andExpect(jsonPath("$[0].username").value("TricUser"))
-                .andExpect(jsonPath("$[2].userId").value(users.get(2).getUserId()))
-                .andDo(print());
-    }
-
-    @Test
     void shouldAddVote() throws Exception {
 
         Vote vote=  new Vote(1,55,2,22);
 
         mockMvc.perform(post("/userApi/vote",vote).contentType(MediaType.APPLICATION_JSON)
-        .content(objectMapper.writeValueAsString(vote)))
+                        .content(objectMapper.writeValueAsString(vote)))
                 .andExpect(status().isCreated())
                 .andDo(print());
     }
-
-    @Test
-    void shouldReturnResult() throws Exception {
-        Question question= new Question(1,1,"question?");
-        Answer answer1 = new Answer(1,"yes",question);
-        Answer answer2 = new Answer(2,"no",question);
-        List<Answer> answerList = new ArrayList<>();
-        answerList.add(answer1);
-        answerList.add(answer1);
-        question.setAnswers(answerList);
-        Result result = new Result(question,answer1,answer2,90,10);
-
-        given(questionService.getResult(1)).willReturn(result);
-        mockMvc.perform(get("/userApi/result").param("questionId", "1")
-                .accept(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(result)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.question.questionId").value(result.getQuestion().getQuestionId()))
-                .andExpect(jsonPath("$.firstAnswer.answerId").value(result.getFirstAnswer().getAnswerId()))
-                .andExpect(jsonPath("$.secondAnswer.answerId").value(result.getSecondAnswer().getAnswerId()))
-                .andExpect(jsonPath("$.firstAnswerRate").value(result.getFirstAnswerRate()))
-                .andExpect(jsonPath("$.secondAnswerRate").value(result.getSecondAnswerRate()))
-                .andDo(print());
-    }
-
 
     @Test
     void shouldReturnAppStatus() throws Exception {
@@ -136,30 +89,53 @@ public class UserControllerTest {
                 .andDo(print());
     }
 
+    @Test
+    void shouldReturnResult() throws Exception {
+        Question question= new Question(1,1,"question?");
+        Answer answer1 = new Answer(1,"yes",question,"Conservative","Pragmatic");
+        Answer answer2 = new Answer(2,"no",question,"Progressive","Idealist");
+        List<Answer> answerList = new ArrayList<>();
+        answerList.add(answer1);
+        answerList.add(answer1);
+        question.setAnswers(answerList);
+        Result result = new Result(question,answer1,answer2,90,10);
+
+        given(questionService.getResult(1)).willReturn(result);
+        mockMvc.perform(get("/userApi/result").param("questionId", "1")
+                        .accept(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(result)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.question.questionId").value(result.getQuestion().getQuestionId()))
+                .andExpect(jsonPath("$.firstAnswer.answerId").value(result.getFirstAnswer().getAnswerId()))
+                .andExpect(jsonPath("$.secondAnswer.answerId").value(result.getSecondAnswer().getAnswerId()))
+                .andExpect(jsonPath("$.firstAnswerRate").value(result.getFirstAnswerRate()))
+                .andExpect(jsonPath("$.secondAnswerRate").value(result.getSecondAnswerRate()))
+                .andDo(print());
+    }
 
     @Test
     void shouldReturnFinalResult() throws Exception {
 
-        List<FinalResult> finalResults =  Arrays.asList(new FinalResult(new Category(1,"Category1"),60),
-                                                        new FinalResult(new Category(2,"Category2"),40),
-                                                        new FinalResult(new Category(3,"Category3"),30));
+        List<CategoryRate> categoryRateList = Arrays.asList(new CategoryRate("Category1","Category2",60),
+                                                            new CategoryRate("Category3","Category4",50)  );
+        List<FinalCategory> finalCategoryList = Arrays.asList(new FinalCategory("Theme1","Category1","Category3"),
+                                                                new FinalCategory("Theme2","Category2","Category4"));
+        FinalResult finalResult = new FinalResult(categoryRateList,finalCategoryList);
 
-
-        given(categoryService.getFinalResults(1, new ArrayList<>())).willReturn(finalResults);
+        given(questionService.getFinalResults(1)).willReturn(finalResult);
         mockMvc.perform(get("/userApi/finalResult").param("userId", "1")
-                        .accept(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(finalResults)))
+                        .accept(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(finalResult)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()").value(finalResults.size()))
-                .andExpect(jsonPath("$[0].rate").value(finalResults.get(0).getRate()))
-                .andExpect(jsonPath("$[2].category.categoryName").value(finalResults.get(2).getCategory().getCategoryName()))
-                .andExpect(jsonPath("$[1].category.categoryId").value(finalResults.get(1).getCategory().getCategoryId()))
+                .andExpect(jsonPath("$.categoryRateList.size()").value(categoryRateList.size()))
+                .andExpect(jsonPath("$.categoryRateList[0].category").value(categoryRateList.get(0).getCategory()))
+                .andExpect(jsonPath("$.finalCategoryList.size()").value(finalCategoryList.size()))
+                .andExpect(jsonPath("$.finalCategoryList[0].questionTheme").value(finalCategoryList.get(0).getQuestionTheme()))
+                .andExpect(jsonPath("$.finalCategoryList[0].answerFirstCategory").value(finalCategoryList.get(0).getAnswerFirstCategory()))
+                .andExpect(jsonPath("$.finalCategoryList[0].answerSecondCategory").value(finalCategoryList.get(0).getAnswerSecondCategory()))
                 .andDo(print());
     }
 
-
     @Test
     void shouldReturnCast() throws Exception {
-
         List<Contributor> contributors = Arrays.asList(new Contributor(1,"Maria","Dancer","Cast"),
                 new Contributor(2,"Mario","Actor","Cast"));
 
@@ -175,8 +151,6 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$[3]").doesNotExist())
                 .andDo(print());
     }
-
-
     @Test
     void shouldReturnDevTeam() throws Exception {
 
@@ -196,12 +170,10 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$[3]").doesNotExist())
                 .andDo(print());
     }
-
-
     @Test
     void shouldReturnPlayInfo() throws Exception {
 
-        PlayInfo playInfo = new PlayInfo(1,"TRIC The Right Choice");
+        PlayInfo playInfo = new PlayInfo(1,"TRIC The Right Choice","TRIC will choose for you");
 
         given(playInfoService.getPlayInfo()).willReturn(playInfo);
         mockMvc.perform(get("/userApi/getPlayInfo")
@@ -209,6 +181,25 @@ public class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.playInfoId").value(playInfo.getPlayInfoId()))
                 .andExpect(jsonPath("$.playInfoText").value(playInfo.getPlayInfoText()))
+                .andExpect(jsonPath("$.finalResultText").value(playInfo.getFinalResultText()))
+                .andDo(print());
+    }
+
+    @Test
+    void shouldReturnNumberOfQuestions() throws Exception {
+        given(questionService.getNumberOfQuestions()).willReturn(5);
+        mockMvc.perform(get("/userApi/numberOfQuestions"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(5))
+                .andDo(print());
+    }
+
+    @Test
+    void shouldReturnPredictedAnswer() throws Exception {
+        given(questionService.getPredictedAnswer(1)).willReturn(1);
+        mockMvc.perform(get("/userApi/predictedAnswer").param("userId", "1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(1))
                 .andDo(print());
     }
 }

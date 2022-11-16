@@ -11,6 +11,7 @@ import tric.tricproject.Service.*;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin
 @RestController
@@ -94,7 +95,6 @@ public class AdminController {
 
     @PatchMapping("/editQuestion")
     public ResponseEntity<Question> editQuestion(@RequestBody Question question) {
-
         try {
             Question _question = questionService.editQuestion(question);
             return new ResponseEntity<>(_question, HttpStatus.CREATED);
