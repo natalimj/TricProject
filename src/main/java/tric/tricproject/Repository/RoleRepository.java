@@ -9,5 +9,4 @@ import tric.tricproject.Model.Role;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
-	Optional<Role> findByName(ERole name);
 }
