@@ -21,8 +21,7 @@ public class AdminController {
     VoteService voteService;
     @Autowired
     QuestionService questionService;
-    @Autowired
-    StatusService statusService;
+
     @Autowired
     ContributorService contributorService;
     @Autowired
@@ -39,7 +38,7 @@ public class AdminController {
             //delete all users and votes
             userService.deleteAllUsers();
             voteService.deleteAllVotes();
-            statusService.setAppStatus(false);
+            playInfoService.setAppStatus(false);
             //predictionService.clearPredictions();
             template.convertAndSend("/topic/status", false);
             return new ResponseEntity<>(resultJson, HttpStatus.OK);
@@ -135,9 +134,9 @@ public class AdminController {
     @PostMapping("/activate")
     public ResponseEntity<Status> setActive() {
         try {
-            Status status = statusService.setAppStatus(true);
+            playInfoService.setAppStatus(true);
             template.convertAndSend("/topic/status", true);
-            return new ResponseEntity<>(status, HttpStatus.CREATED);
+            return new ResponseEntity<>(new Status(true), HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -146,9 +145,9 @@ public class AdminController {
     @PostMapping("/deactivate")
     public ResponseEntity<Status> setInactive() {
         try {
-            Status status = statusService.setAppStatus(false);
+            playInfoService.setAppStatus(false);
             template.convertAndSend("/topic/status", false);
-            return new ResponseEntity<>(status, HttpStatus.CREATED);
+            return new ResponseEntity<>(new Status(false), HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -173,6 +172,7 @@ public class AdminController {
     @PostMapping("/contributor")
     public ResponseEntity<Contributor> addContributor(@RequestBody Contributor contributor) {
         try {
+            contributor.setPlayInfo(new PlayInfo(1L));
             Contributor _contributor = contributorService.addContributor(contributor);
             return new ResponseEntity<>(_contributor, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -183,6 +183,7 @@ public class AdminController {
     @PatchMapping("/editContributor")
     public ResponseEntity<Contributor> editContributor(@RequestBody Contributor contributor) {
         try {
+            contributor.setPlayInfo(new PlayInfo(1L));
             Contributor _contributor = contributorService.editContributor(contributor);
             return new ResponseEntity<>(_contributor, HttpStatus.CREATED);
         } catch (Exception e) {

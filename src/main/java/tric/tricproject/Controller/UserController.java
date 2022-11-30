@@ -19,8 +19,6 @@ public class UserController {
     @Autowired
     VoteService voteService;
     @Autowired
-    StatusService statusService;
-    @Autowired
     SimpMessagingTemplate template;
     @Autowired
     QuestionService questionService;
@@ -55,7 +53,7 @@ public class UserController {
     @GetMapping("/getAppStatus")
     public ResponseEntity<Boolean> getAppStatus() {
         try {
-            Boolean isActive = statusService.getStatus();
+            Boolean isActive = playInfoService.getStatus();
             return new ResponseEntity<>(isActive, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

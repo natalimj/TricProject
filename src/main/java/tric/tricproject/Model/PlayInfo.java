@@ -1,6 +1,8 @@
 package tric.tricproject.Model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -17,10 +19,28 @@ public class PlayInfo {
     @Column(name = "finalResultText")
     private String finalResultText;
 
+    @Column(name = "isActive")
+    private Boolean isActive;
+
+    @OneToMany(mappedBy="playInfo",cascade={CascadeType.ALL})
+    private List<Contributor> contributors=   new ArrayList<>();
+
     public PlayInfo(long playInfoId, String playInfoText, String finalResultText) {
         this.playInfoId = playInfoId;
         this.playInfoText = playInfoText;
         this.finalResultText = finalResultText;
+    }
+
+    public PlayInfo(long playInfoId) {
+        this.playInfoId = playInfoId;
+    }
+
+    public PlayInfo(long playInfoId, String playInfoText, String finalResultText, Boolean isActive, List<Contributor> contributors) {
+        this.playInfoId = playInfoId;
+        this.playInfoText = playInfoText;
+        this.finalResultText = finalResultText;
+        this.isActive = isActive;
+        this.contributors = contributors;
     }
 
     public PlayInfo() {
@@ -48,5 +68,17 @@ public class PlayInfo {
 
     public void setFinalResultText(String finalResultText) {
         this.finalResultText = finalResultText;
+    }
+
+    public Boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
+    }
+
+    public void setContributors(List<Contributor> contributors) {
+        this.contributors = contributors;
     }
 }

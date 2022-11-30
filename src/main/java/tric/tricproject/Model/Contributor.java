@@ -19,11 +19,24 @@ public class Contributor {
     @Column(name = "type")
     private String type;
 
+    @ManyToOne
+    @JoinColumn(name="playInfoId")
+    private PlayInfo playInfo;
+
+
     public Contributor(long contributorId, String name, String description, String type) {
         this.contributorId = contributorId;
         this.name = name;
         this.description = description;
         this.type = type;
+    }
+
+    public Contributor(long contributorId, String name, String description, String type, PlayInfo playInfo) {
+        this.contributorId = contributorId;
+        this.name = name;
+        this.description = description;
+        this.type = type;
+        this.playInfo = playInfo;
     }
 
     public Contributor(String name, String description) {
@@ -64,5 +77,13 @@ public class Contributor {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public PlayInfo getPlayInfo() {
+        return playInfo;
+    }
+
+    public void setPlayInfo(PlayInfo playInfo) {
+        this.playInfo = playInfo;
     }
 }
