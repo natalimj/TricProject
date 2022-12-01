@@ -3,7 +3,7 @@ package tric.tricproject.Model;
 import javax.persistence.*;
 
 @Entity
-@Table(name="contributor")
+@Table(name="contributor", schema ="play")
 public class Contributor {
 
     @Id

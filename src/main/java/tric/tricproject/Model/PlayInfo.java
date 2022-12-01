@@ -6,17 +6,17 @@ import java.util.List;
 
 
 @Entity
-@Table(name="playInfo")
+@Table(name="playInfo", schema ="play")
 public class PlayInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long playInfoId;
 
-    @Column(name = "text")
+    @Column(name = "text", length = 700)
     private String playInfoText;
 
-    @Column(name = "finalResultText")
+    @Column(name = "finalResultText", length = 500)
     private String finalResultText;
 
     @Column(name = "isActive")

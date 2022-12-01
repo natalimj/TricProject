@@ -3,8 +3,15 @@ package tric.tricproject.Model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "roles")
+@Table(name = "roles", schema ="admin_login")
 public class Role {
+
+	public enum ERole {
+		ROLE_USER,
+		ROLE_MODERATOR,
+		ROLE_ADMIN
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
