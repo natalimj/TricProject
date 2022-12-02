@@ -37,8 +37,6 @@ public class AdminControllerTest {
     @MockBean
     VoteService voteService;
     @MockBean
-    StatusService statusService;
-    @MockBean
     QuestionService questionService;
     @MockBean
     PlayInfoService playInfoService;
@@ -178,22 +176,22 @@ public class AdminControllerTest {
 
     @Test
     void shouldSetStatusActive() throws Exception {
-        Status status = new Status();
-        status.setActive(true);
-        given(statusService.setAppStatus(true)).willReturn(status);
+        PlayInfo playInfo = new PlayInfo();
+        playInfo.setActive(true);
+        given(playInfoService.setAppStatus(true)).willReturn(playInfo);
         mockMvc.perform(post("/adminApi/activate"))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.isActive").value(status.getIsActive()))
+                .andExpect(jsonPath("$.isActive").value(playInfo.isActive()))
                 .andDo(print());
     }
     @Test
     void shouldSetStatusInactive() throws Exception {
-        Status status = new Status();
-        status.setActive(false);
-        given(statusService.setAppStatus(false)).willReturn(status);
+        PlayInfo playInfo = new PlayInfo();
+        playInfo.setActive(false);
+        given(playInfoService.setAppStatus(false)).willReturn(playInfo);
         mockMvc.perform(post("/adminApi/deactivate"))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.isActive").value(status.getIsActive()))
+                .andExpect(jsonPath("$.isActive").value(playInfo.isActive()))
                 .andDo(print());
 
     }

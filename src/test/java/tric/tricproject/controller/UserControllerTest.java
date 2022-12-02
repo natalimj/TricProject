@@ -39,8 +39,6 @@ public class UserControllerTest {
     @MockBean
     VoteService voteService;
     @MockBean
-    StatusService statusService;
-    @MockBean
     QuestionService questionService;
     @MockBean
     PlayInfoService playInfoService;
@@ -80,8 +78,7 @@ public class UserControllerTest {
     @Test
     void shouldReturnAppStatus() throws Exception {
         boolean isActive = true;
-        given(statusService.getStatus()).willReturn(isActive );
-
+        given(playInfoService.getStatus()).willReturn(isActive);
         mockMvc.perform(get("/userApi/getAppStatus").accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(isActive)))
                 .andExpect(status().isOk())
