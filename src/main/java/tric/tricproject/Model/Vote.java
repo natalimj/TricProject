@@ -3,7 +3,7 @@ package tric.tricproject.Model;
 import javax.persistence.*;
 
 @Entity
-@Table(name="vote")
+@Table(name="vote",schema ="voting")
 public class Vote {
 
     @Id

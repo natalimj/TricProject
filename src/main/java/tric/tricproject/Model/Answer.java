@@ -3,22 +3,22 @@ package tric.tricproject.Model;
 import javax.persistence.*;
 
 @Entity
-@Table(name="answer")
+@Table(name="answer", schema ="voting")
 public class Answer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long answerId;
 
-    @Column(name = "text")
+    @Column(name = "text", length = 50)
     private String answerText;
     @ManyToOne
     @JoinColumn(name="questionId", nullable=false)
     private Question question;
 
-    @Column(name = "firstCategory")
+    @Column(name = "firstCategory", length = 20)
     private String firstCategory;
 
-    @Column(name = "secondCategory")
+    @Column(name = "secondCategory", length = 20)
     private String secondCategory;
 
     public Answer(int answerId, String answerText, Question question, String firstCategory, String secondCategory) {

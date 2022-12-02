@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import tric.tricproject.Model.*;
 import tric.tricproject.Service.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,14 +22,13 @@ public class AdminController {
     VoteService voteService;
     @Autowired
     QuestionService questionService;
-    @Autowired
-    StatusService statusService;
+
     @Autowired
     ContributorService contributorService;
     @Autowired
     PlayInfoService playInfoService;
-    @Autowired
-    PredictionService predictionService;
+    /*@Autowired
+    PredictionService predictionService;*/
     @Autowired
     SimpMessagingTemplate template;
 
@@ -41,8 +39,8 @@ public class AdminController {
             //delete all users and votes
             userService.deleteAllUsers();
             voteService.deleteAllVotes();
-            statusService.setAppStatus(false);
-            predictionService.clearPredictions();
+            playInfoService.setAppStatus(false);
+            //predictionService.clearPredictions();
             template.convertAndSend("/topic/status", false);
             return new ResponseEntity<>(resultJson, HttpStatus.OK);
         } catch (Exception e) {
@@ -51,20 +49,20 @@ public class AdminController {
     }
 
     @GetMapping("/question")
-    public ResponseEntity<Question> getQuestion(@RequestParam("questionNumber") int questionNumber) {
+    public ResponseEntity getQuestion(@RequestParam("questionNumber") int questionNumber) {
         try {
             Question question = questionService.getQuestionByNumber(questionNumber);
             if (question != null) {
-                int numberOfQuestions = questionService.getNumberOfQuestions();
+                /*int numberOfQuestions = questionService.getNumberOfQuestions();
                 if (questionNumber == numberOfQuestions) {
                     predictionService.generatePredictions(numberOfQuestions - 1);
-                }
+                }*/
                 return new ResponseEntity<>(question, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
@@ -136,9 +134,9 @@ public class AdminController {
     @PostMapping("/activate")
     public ResponseEntity<Status> setActive() {
         try {
-            Status status = statusService.setAppStatus(true);
+            playInfoService.setAppStatus(true);
             template.convertAndSend("/topic/status", true);
-            return new ResponseEntity<>(status, HttpStatus.CREATED);
+            return new ResponseEntity<>(new Status(true), HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -147,9 +145,9 @@ public class AdminController {
     @PostMapping("/deactivate")
     public ResponseEntity<Status> setInactive() {
         try {
-            Status status = statusService.setAppStatus(false);
+            playInfoService.setAppStatus(false);
             template.convertAndSend("/topic/status", false);
-            return new ResponseEntity<>(status, HttpStatus.CREATED);
+            return new ResponseEntity<>(new Status(false), HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -174,6 +172,7 @@ public class AdminController {
     @PostMapping("/contributor")
     public ResponseEntity<Contributor> addContributor(@RequestBody Contributor contributor) {
         try {
+            contributor.setPlayInfo(new PlayInfo(1L));
             Contributor _contributor = contributorService.addContributor(contributor);
             return new ResponseEntity<>(_contributor, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -184,6 +183,7 @@ public class AdminController {
     @PatchMapping("/editContributor")
     public ResponseEntity<Contributor> editContributor(@RequestBody Contributor contributor) {
         try {
+            contributor.setPlayInfo(new PlayInfo(1L));
             Contributor _contributor = contributorService.editContributor(contributor);
             return new ResponseEntity<>(_contributor, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -258,6 +258,15 @@ public class AdminController {
             return new ResponseEntity<>(timer, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @PostMapping("/cleanResultPage")
+    public ResponseEntity cleanResultPage() {
+        try {
+            template.convertAndSend("/topic/cleanPage",true);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

@@ -19,8 +19,6 @@ public class UserController {
     @Autowired
     VoteService voteService;
     @Autowired
-    StatusService statusService;
-    @Autowired
     SimpMessagingTemplate template;
     @Autowired
     QuestionService questionService;
@@ -28,8 +26,8 @@ public class UserController {
     PlayInfoService playInfoService;
     @Autowired
     ContributorService contributorService;
-    @Autowired
-    PredictionService predictionService;
+    /*@Autowired
+    PredictionService predictionService;*/
 
     @PostMapping("/user")
     public ResponseEntity<User> createUser(@RequestBody User user) {
@@ -55,7 +53,7 @@ public class UserController {
     @GetMapping("/getAppStatus")
     public ResponseEntity<Boolean> getAppStatus() {
         try {
-            Boolean isActive = statusService.getStatus();
+            Boolean isActive = playInfoService.getStatus();
             return new ResponseEntity<>(isActive, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -126,9 +124,9 @@ public class UserController {
     @GetMapping("/predictedAnswer")
     public ResponseEntity<Integer> getPredictedAnswer(@RequestParam("userId") long userId) {
         try {
-            int predictedAnswerNumber = predictionService.werePredictionsGenerated()
-                    ? predictionService.getPredictionForUser(userId) : questionService.getPredictedAnswer(userId);
-            return new ResponseEntity<>(predictedAnswerNumber, HttpStatus.OK);
+            /*int predictedAnswerNumber = predictionService.werePredictionsGenerated()
+                    ? predictionService.getPredictionForUser(userId) : questionService.getPredictedAnswer(userId);*/
+            return new ResponseEntity<>(questionService.getPredictedAnswer(userId), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }

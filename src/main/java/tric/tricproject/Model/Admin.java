@@ -4,15 +4,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "admins",
+@Table(name = "admins", schema ="admin_login",
 		uniqueConstraints = {
 				@UniqueConstraint(columnNames = "username"),
-				@UniqueConstraint(columnNames = "email")
 		})
 public class Admin {
 	@Id
@@ -23,17 +21,13 @@ public class Admin {
 	@Size(max = 20)
 	private String username;
 
-	@NotBlank
-	@Size(max = 50)
-	@Email
-	private String email;
 
 	@NotBlank
 	@Size(max = 120)
 	private String password;
 
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(  name = "user_roles",
+	@JoinTable(  name = "user_roles", schema="admin_login",
 			joinColumns = @JoinColumn(name = "user_id"),
 			inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles = new HashSet<>();
@@ -41,9 +35,8 @@ public class Admin {
 	public Admin() {
 	}
 
-	public Admin(String username, String email, String password) {
+	public Admin(String username, String password) {
 		this.username = username;
-		this.email = email;
 		this.password = password;
 	}
 
@@ -61,14 +54,6 @@ public class Admin {
 
 	public void setUsername(String username) {
 		this.username = username;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
 	}
 
 	public String getPassword() {

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name="question")
+@Table(name="question",schema ="voting")
 public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,7 +13,7 @@ public class Question {
 
     @Column(name = "number")
     private int questionNumber;
-    @Column(name = "text")
+    @Column(name = "text", length = 500)
     private String questionText;
 
     @Column(name = "time")

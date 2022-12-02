@@ -1,4 +1,4 @@
-package tric.tricproject.Security.request;
+package tric.tricproject.Security;
 
 import javax.validation.constraints.NotBlank;
 

@@ -27,8 +27,6 @@ public class PredictionServiceImpl implements PredictionService {
     UserRepository userRepository;
     @Autowired
     AnswerRepository answerRepository;
-    @Autowired
-    QuestionService questionService;
 
     @Override
     public void generatePredictions(int numberOfQuestions) {
@@ -41,12 +39,11 @@ public class PredictionServiceImpl implements PredictionService {
             }
         }
 
-        Instances dataset = loadForHierarchical(votes, numberOfQuestions);
-        HierarchicalClusterer hc = new HierarchicalClusterer();
-        hc.setLinkType(new SelectedTag(4, TAGS_LINK_TYPE));  // CENTROID
-        hc.setNumClusters(2);
-
         try {
+            Instances dataset = loadForHierarchical(votes, numberOfQuestions);
+            HierarchicalClusterer hc = new HierarchicalClusterer();
+            hc.setLinkType(new SelectedTag(4, TAGS_LINK_TYPE));  // CENTROID
+            hc.setNumClusters(2);
             hc.buildClusterer(dataset);
             for (int i = 0; i < dataset.size(); i++) {
                 userPredictions.put(users.get(i).getUserId(), hc.clusterInstance(dataset.get(i)));
@@ -58,7 +55,7 @@ public class PredictionServiceImpl implements PredictionService {
 
     @Override
     public int getPredictionForUser(long userId) {
-        return userPredictions.getOrDefault(userId, questionService.getPredictedAnswer(userId));
+        return userPredictions.getOrDefault(userId, 0);
     }
 
     @Override
