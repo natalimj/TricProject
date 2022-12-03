@@ -79,10 +79,6 @@ public class Contributor {
         this.type = type;
     }
 
-    public PlayInfo getPlayInfo() {
-        return playInfo;
-    }
-
     public void setPlayInfo(PlayInfo playInfo) {
         this.playInfo = playInfo;
     }
