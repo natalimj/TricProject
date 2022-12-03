@@ -78,6 +78,11 @@
             <artifactId>weka-stable</artifactId>
             <version>${weka.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>1.6.13</version>
+        </dependency>
     </dependencies>
 
     <build>
