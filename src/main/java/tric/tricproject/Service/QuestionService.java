@@ -5,11 +5,16 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-
+/**
+ * Service interface
+ * containing methods to perform CRUD operations for {@link Question}
+ * and prepare the results and prediction to send to the client
+ *
+ * @author Natali Munk-Jakobsen
+ * @version 1.0, October 2022
+ */
 @Service
 public interface QuestionService {
-    
-    void deleteQuestion(Question question);
     void deleteQuestionById(long questionId);
     List<Question> getAllQuestions();
     Question getQuestionByNumber(int questionNumber);
@@ -21,6 +26,5 @@ public interface QuestionService {
     FinalResult getFinalResults(long userId) ;
     Question addQuestion(Question question);
     Question editQuestion(Question question);
-    int getPredictedAnswer(long userId) ;
     int getNumberOfQuestions();
 }

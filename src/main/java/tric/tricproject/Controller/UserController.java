@@ -38,6 +38,8 @@ public class UserController {
 
     @Autowired
     ContributorService contributorService;
+    @Autowired
+    PredictionService predictionService;
 
     /**
      * Controller method for creating a new user
@@ -192,7 +194,9 @@ public class UserController {
     @GetMapping("/predictedAnswer")
     public ResponseEntity<Integer> getPredictedAnswer(@RequestParam("userId") long userId) {
         try {
-            return new ResponseEntity<>(questionService.getPredictedAnswer(userId), HttpStatus.OK);
+            /*int predictedAnswerNumber = predictionService.werePredictionsGenerated()
+                    ? predictionService.getPredictionForUser(userId) : questionService.getPredictedAnswer(userId);*/
+            return new ResponseEntity<>(predictionService.getPredictedAnswer(userId), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }

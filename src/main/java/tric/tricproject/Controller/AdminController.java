@@ -35,6 +35,8 @@ public class AdminController {
 
     @Autowired
     PlayInfoService playInfoService;
+    /*@Autowired
+    PredictionService predictionService;*/
 
     @Autowired
     SimpMessagingTemplate template;
@@ -54,6 +56,7 @@ public class AdminController {
             userService.deleteAllUsers();
             voteService.deleteAllVotes();
             playInfoService.setAppStatus(false);
+            //predictionService.clearPredictions();
             template.convertAndSend("/topic/status", false);
             return new ResponseEntity<>(resultJson, HttpStatus.OK);
         } catch (Exception e) {
@@ -72,6 +75,10 @@ public class AdminController {
         try {
             Question question = questionService.getQuestionByNumber(questionNumber);
             if (question != null) {
+                /*int numberOfQuestions = questionService.getNumberOfQuestions();
+                if (questionNumber == numberOfQuestions) {
+                    predictionService.generatePredictions(numberOfQuestions - 1);
+                }*/
                 return new ResponseEntity<>(question, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
