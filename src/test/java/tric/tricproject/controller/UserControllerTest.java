@@ -193,7 +193,7 @@ public class UserControllerTest {
 
     @Test
     void shouldReturnPredictedAnswer() throws Exception {
-        given(questionService.getPredictedAnswer(1)).willReturn(1);
+        given(predictionService.getPredictedAnswer(1)).willReturn(1);
         mockMvc.perform(get("/userApi/predictedAnswer").param("userId", "1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").value(1))
