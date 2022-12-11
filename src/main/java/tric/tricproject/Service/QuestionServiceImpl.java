@@ -11,13 +11,21 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+/**
+ * Service implementation class
+ * containing methods to perform CRUD operations for {@link Question}
+ * and prepare the results and prediction to send to the client
+ *
+ * @author Natali Munk-Jakobsen
+ * @version 1.0, October 2022
+ */
 @Service
 public class QuestionServiceImpl implements QuestionService {
+
     @Autowired
     QuestionRepository questionRepository;
     @Autowired
     AnswerRepository answerRepository;
-
     @Autowired
     VoteRepository voteRepository;
 
@@ -25,12 +33,6 @@ public class QuestionServiceImpl implements QuestionService {
     static final String CATEGORY2 = "Progressive";
     static final String CATEGORY3 = "Pragmatic";
     static final String CATEGORY4 = "Idealist";
-
-    @Override
-    public void deleteQuestion(Question questionToDelete) {
-        questionRepository.delete(questionToDelete);
-        updateQuestionNumbers();
-    }
 
     @Override
     public void deleteQuestionById(long questionId) {
@@ -48,6 +50,14 @@ public class QuestionServiceImpl implements QuestionService {
         return questionRepository.findByQuestionNumber(questionNumber);
     }
 
+    /**
+     * A method to create a Result to transfer voting result for a question.
+     * All user votes for a question are retrieved from the database
+     * to calculate voting rates for each answer.
+     *
+     * @param questionId the question id
+     * @return the result object holding the question, answers and answer rates
+     */
     public Result getResult(long questionId) {
 
         Question question = questionRepository.findByQuestionId(questionId);
@@ -76,6 +86,12 @@ public class QuestionServiceImpl implements QuestionService {
         return questionRepository.save(question);
     }
 
+    /**
+     * A method to create a JSON string representing list of {@link PlayResult}.
+     *
+     * @return a string contains information about the final voting result
+     */
+    @Override
     public String getResultListJson() {
         List<PlayResult> resultList = new ArrayList<>();
         for (Question question : getAllQuestions()) {
@@ -96,6 +112,12 @@ public class QuestionServiceImpl implements QuestionService {
         questionRepository.deleteAll();
     }
 
+    /**
+     * Gets final results.
+     *
+     * @param userId the user id
+     * @return the final results
+     */
     @Override
     public FinalResult getFinalResults(long userId) {
 
@@ -171,44 +193,6 @@ public class QuestionServiceImpl implements QuestionService {
         question.getAnswers().get(1).setFirstCategory(_question.getAnswers().get(1).getFirstCategory());
         question.getAnswers().get(1).setSecondCategory(_question.getAnswers().get(1).getSecondCategory());
         return questionRepository.save(question);
-    }
-
-    @Override
-    public int getPredictedAnswer(long userId) {
-        List<Vote> votes = voteRepository.findAllByUserId(userId);
-        List<String> primaryCategories = new ArrayList<>();
-        List<String> secondaryCategories = new ArrayList<>();
-
-        for (Vote vote : votes) {
-            Answer answer = answerRepository.findByAnswerId(vote.getAnswerId());
-            primaryCategories.add(answer.getFirstCategory());
-            secondaryCategories.add(answer.getSecondCategory());
-        }
-
-        HashMap<String, Double> weightedCategories = new HashMap<>();
-        weightedCategories.put(CATEGORY1, Collections.frequency(primaryCategories, CATEGORY1) + (Collections.frequency(secondaryCategories, CATEGORY1) * 0.5));
-        weightedCategories.put(CATEGORY2, Collections.frequency(primaryCategories, CATEGORY2) + (Collections.frequency(secondaryCategories, CATEGORY2) * 0.5));
-        weightedCategories.put(CATEGORY3, Collections.frequency(primaryCategories, CATEGORY3) + (Collections.frequency(secondaryCategories, CATEGORY3) * 0.5));
-        weightedCategories.put(CATEGORY4, Collections.frequency(primaryCategories, CATEGORY4) + (Collections.frequency(secondaryCategories, CATEGORY4) * 0.5));
-
-        Question finalQuestion = questionRepository.findByQuestionNumber(getNumberOfQuestions());
-        if (weightedCategories.get(finalQuestion.getAnswers().get(0).getFirstCategory()) > weightedCategories.get(finalQuestion.getAnswers().get(1).getFirstCategory())) {
-            return 0;
-        } else if (weightedCategories.get(finalQuestion.getAnswers().get(0).getFirstCategory()) < weightedCategories.get(finalQuestion.getAnswers().get(1).getFirstCategory())) {
-            return 1;
-        } else {
-            if (weightedCategories.get(finalQuestion.getAnswers().get(0).getSecondCategory()) > weightedCategories.get(finalQuestion.getAnswers().get(1).getSecondCategory())) {
-                return 0;
-            } else if (weightedCategories.get(finalQuestion.getAnswers().get(0).getSecondCategory()) < weightedCategories.get(finalQuestion.getAnswers().get(1).getSecondCategory())) {
-                return 1;
-            } else {
-                Question secondToLastQuestion = questionRepository.findByQuestionNumber(getNumberOfQuestions()-1);
-                if(secondToLastQuestion.getAnswers().get(0).getFirstCategory().equals(finalQuestion.getAnswers().get(0).getFirstCategory())){
-                    return 0;
-                }
-                return 1;
-            }
-        }
     }
 
     @Override
