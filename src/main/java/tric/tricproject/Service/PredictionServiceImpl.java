@@ -69,7 +69,7 @@ public class PredictionServiceImpl implements PredictionService {
         try {
             Instances dataset = loadForHierarchical(votes, numberOfQuestions);
             HierarchicalClusterer hc = new HierarchicalClusterer();
-            hc.setLinkType(new SelectedTag(4, TAGS_LINK_TYPE));  // CENTROID
+            hc.setLinkType(new SelectedTag(4, TAGS_LINK_TYPE));  // CENTROID LINK
             hc.setNumClusters(2);
             hc.buildClusterer(dataset);
             for (int i = 0; i < dataset.size(); i++) {
