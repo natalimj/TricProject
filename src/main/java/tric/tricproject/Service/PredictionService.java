@@ -5,7 +5,7 @@ import tric.tricproject.Model.Question;
 
 /**
  *
- * @author Daria Maria Popa
+ * @author Daria-Maria Popa
  * @version 1.0, November 2022
  */
 @Service

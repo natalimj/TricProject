@@ -27,7 +27,7 @@ import static weka.clusterers.HierarchicalClusterer.TAGS_LINK_TYPE;
 
 /**
  *
- * @author Daria Maria Popa
+ * @author Daria-Maria Popa
  * @version 1.0, November 2022
  */
 @Service
@@ -165,7 +165,7 @@ public class PredictionServiceImpl implements PredictionService {
         }
     }
 
-    public int getNumberOfQuestions() {
+    private int getNumberOfQuestions() {
         Long number = questionRepository.count();
         return  number.intValue();
     }

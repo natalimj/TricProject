@@ -14,7 +14,7 @@ import java.util.*;
 /**
  * Service implementation class
  * containing methods to perform CRUD operations for {@link Question}
- * and prepare the results and prediction to send to the client
+ * and prepare the results to send to the client
  *
  * @author Natali Munk-Jakobsen
  * @version 1.0, October 2022
