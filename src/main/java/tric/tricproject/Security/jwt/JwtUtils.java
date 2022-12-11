@@ -10,6 +10,14 @@ import tric.tricproject.Security.services.UserDetailsImpl;
 
 import java.util.Date;
 
+/**
+ * contains methods to generate a JWT from username, date, expiration, secret
+ * and validate a JWT
+ *
+ * @author bezkoder
+ * September,2022
+ * see https://www.bezkoder.com/spring-boot-jwt-authentication/
+ */
 @Component
 public class JwtUtils {
 	private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);

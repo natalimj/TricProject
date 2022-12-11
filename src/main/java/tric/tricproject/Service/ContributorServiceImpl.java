@@ -7,6 +7,13 @@ import tric.tricproject.Repository.ContributorRepository;
 
 import java.util.List;
 
+/**
+ * Service implementation class
+ * performing CRUD operations for {@link Contributor}
+ *
+ * @author Natali Munk-Jakobsen
+ * @version 1.0, October 2022
+ */
 @Service
 public class ContributorServiceImpl implements ContributorService {
     @Autowired

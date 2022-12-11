@@ -2,10 +2,18 @@ package tric.tricproject.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tric.tricproject.Model.Contributor;
 import tric.tricproject.Model.PlayInfo;
 import tric.tricproject.Model.Status;
 import tric.tricproject.Repository.PlayInfoRepository;
 
+/**
+ * Service implementation class
+ * performing CRUD operations for {@link PlayInfo}
+ *
+ * @author Natali Munk-Jakobsen
+ * @version 1.0, October 2022
+ */
 @Service
 public class PlayInfoServiceImpl implements PlayInfoService{
 

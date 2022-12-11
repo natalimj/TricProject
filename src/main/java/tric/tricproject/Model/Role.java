@@ -2,6 +2,13 @@ package tric.tricproject.Model;
 
 import javax.persistence.*;
 
+/**
+ * Role class holds user roles for authorization
+ * includes nested Enum ERole
+ *
+ * @author Bogdan Mezei
+ * @version 1.0, October 2022
+ */
 @Entity
 @Table(name = "roles", schema ="admin_login")
 public class Role {

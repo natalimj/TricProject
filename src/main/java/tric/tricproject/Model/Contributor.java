@@ -2,8 +2,16 @@ package tric.tricproject.Model;
 
 import javax.persistence.*;
 
+/**
+ * Contributor class holds information about a contributor (Cast or Dev Team)
+ * The class is annotated with @Entity and @Table annotations
+ * in order to map the object with a database table using Spring Data JPA
+ *
+ * @author Natali Munk-Jakobsen
+ * @version 1.0, September 2022
+ */
 @Entity
-@Table(name="contributor", schema ="play")
+@Table(name="contributor")
 public class Contributor {
 
     @Id
@@ -23,13 +31,13 @@ public class Contributor {
     @JoinColumn(name="playInfoId")
     private PlayInfo playInfo;
 
-
     public Contributor(long contributorId, String name, String description, String type) {
         this.contributorId = contributorId;
         this.name = name;
         this.description = description;
         this.type = type;
     }
+
 
     public Contributor(long contributorId, String name, String description, String type, PlayInfo playInfo) {
         this.contributorId = contributorId;

@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 import tric.tricproject.Model.Question;
 
 /**
+ * Service interface
+ * containing methods to generate prediction for a user
  *
  * @author Daria-Maria Popa
  * @version 1.0, November 2022
