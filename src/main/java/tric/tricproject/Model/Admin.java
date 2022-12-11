@@ -7,6 +7,13 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+
+/**
+ * Admin class holds username and password for authentication
+ *
+ * @author Bogdan Mezei
+ * @version 1.0, October 2022
+ */
 @Entity
 @Table(name = "admins", schema ="admin_login",
 		uniqueConstraints = {

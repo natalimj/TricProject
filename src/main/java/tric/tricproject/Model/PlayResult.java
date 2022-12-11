@@ -1,5 +1,14 @@
 package tric.tricproject.Model;
 
+
+/**
+ * PlayResult class holds question, answers and their rates
+ * This class is created to hold the basic information about the final result
+ * to be saved in a JSON file.
+ *
+ * @author Natali Munk-Jakobsen
+ * @version 1.0, November 2022
+ */
 public class PlayResult {
     private int questionNumber;
     private String questionText;

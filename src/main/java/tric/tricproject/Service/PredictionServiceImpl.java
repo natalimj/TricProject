@@ -1,5 +1,7 @@
 package tric.tricproject.Service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tric.tricproject.Model.Answer;
@@ -11,6 +13,7 @@ import tric.tricproject.Repository.QuestionRepository;
 import tric.tricproject.Repository.UserRepository;
 import tric.tricproject.Repository.VoteRepository;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -23,12 +26,16 @@ import static tric.tricproject.Service.QuestionServiceImpl.*;
 import static weka.clusterers.HierarchicalClusterer.TAGS_LINK_TYPE;
 
 /**
+ * Service implementation class
+ * containing methods to generate prediction for a user
+ *
  *
  * @author Daria Maria Popa
  * @version 1.0, November 2022
  */
 @Service
 public class PredictionServiceImpl implements PredictionService {
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private HashMap<Long, Integer> userPredictions = new HashMap<>();
 
     @Autowired
@@ -40,6 +47,14 @@ public class PredictionServiceImpl implements PredictionService {
     @Autowired
     QuestionRepository questionRepository;
 
+    /**
+     * This method clusters the users based on their previous vote answers using
+     * an agglomerative hierarchical clustering model. The result represents
+     * the predictions for the answer of the last vote.
+     *
+     * @param numberOfQuestions Represents the number of questions in the database. Used to calculate
+     *                          the dimension of the ARFF dataset and votes matrix
+     */
     @Override
     public void generatePredictions(int numberOfQuestions) {
         List<User> users = userRepository.findAll();
@@ -61,10 +76,14 @@ public class PredictionServiceImpl implements PredictionService {
                 userPredictions.put(users.get(i).getUserId(), hc.clusterInstance(dataset.get(i)));
             }
         } catch (Exception e) {
-            System.err.println(e);
+            logger.error(e.getMessage());
         }
     }
 
+    /**
+     * @param userId The user id for which the prediction is to be retrieved
+     * @return Returns the prediction generated with the machine learning model or 0 by default.
+     */
     @Override
     public int getPredictionForUser(long userId) {
         return userPredictions.getOrDefault(userId, 0);
@@ -80,6 +99,14 @@ public class PredictionServiceImpl implements PredictionService {
         return userPredictions.size() > 0;
     }
 
+    /**
+     * Private method used to load the previous votes matrix into an ARFF dataset as required
+     * by the Weka library used to run machine learning models
+     *
+     * @param data The previous votes data from the users
+     * @param numberOfQuestions The number of questions in the database. Used to set the size of the dataset.
+     * @return An Instances object which contains the given data in an ARFF format.
+     */
     private static Instances loadForHierarchical(int[][] data, int numberOfQuestions) {
         ArrayList<Attribute> attributes = new ArrayList<>();
         for (int i = 1; i <= numberOfQuestions; i++) {
@@ -96,6 +123,12 @@ public class PredictionServiceImpl implements PredictionService {
         return dataset;
     }
 
+    /**
+     * Generates the prediction for a user based on a manual implementation of weighted category sum
+     * for the previous answers' categories.
+     * @param userId The id of the user for which the prediction is to be generated
+     * @return The generated label as either a 0 or a 1, representing either the first or the second answer.
+     */
     @Override
     public int getPredictedAnswer(long userId) {
         List<Vote> votes = voteRepository.findAllByUserId(userId);
@@ -133,7 +166,7 @@ public class PredictionServiceImpl implements PredictionService {
             }
         }
     }
-    public int getNumberOfQuestions() {
+    private int getNumberOfQuestions() {
         Long number = questionRepository.count();
         return  number.intValue();
     }

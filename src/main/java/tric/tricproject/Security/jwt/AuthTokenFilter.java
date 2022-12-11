@@ -18,6 +18,13 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import tric.tricproject.Security.services.UserDetailsServiceImpl;
 
+/**
+ * extends OncePerRequestFilter and overrides doFilterInternal() method
+ *
+ * @author bezkoder
+ * September,2022
+ * see https://www.bezkoder.com/spring-boot-jwt-authentication/
+ */
 public class AuthTokenFilter extends OncePerRequestFilter {
 	@Autowired
 	private JwtUtils jwtUtils;

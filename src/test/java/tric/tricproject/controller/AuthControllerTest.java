@@ -44,7 +44,7 @@ class AuthControllerTest {
                 new ArrayList<String>(Arrays.asList("ADMIN")));
 
         given(authService.authenticateUser(loginRequest)).willReturn(jwtResponse);
-        mockMvc.perform(post("/api/auth/signin",loginRequest).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/authApi/signin",loginRequest).contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isOk())
                 .andDo(print());

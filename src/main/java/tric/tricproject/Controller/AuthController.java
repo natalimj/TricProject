@@ -22,7 +22,7 @@ import tric.tricproject.Service.AuthService;
  */
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/authApi")
 public class AuthController {
 	@Autowired
 	AuthService authService;

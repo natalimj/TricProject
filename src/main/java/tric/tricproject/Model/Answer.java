@@ -2,6 +2,15 @@ package tric.tricproject.Model;
 
 import javax.persistence.*;
 
+/**
+ * Answer class holds information about an answer
+ * including a unique answerId
+ * The class is annotated with @Entity and @Table annotations
+ * in order to map the object with a database table using Spring Data JPA
+ *
+ * @author Natali Munk-Jakobsen
+ * @version 1.0, September 2022
+ */
 @Entity
 @Table(name="answer", schema ="voting")
 public class Answer {
@@ -21,6 +30,7 @@ public class Answer {
     @Column(name = "secondCategory", length = 20)
     private String secondCategory;
 
+
     public Answer(int answerId, String answerText, Question question, String firstCategory, String secondCategory) {
         this.answerId = answerId;
         this.answerText = answerText;
@@ -34,6 +44,7 @@ public class Answer {
         this.firstCategory = firstCategory ;
         this.secondCategory = secondCategory;
     }
+
     public Answer(String answerText, Question question, String firstCategory, String secondCategory) {
         this.answerText = answerText;
         this.question = question;
@@ -47,6 +58,7 @@ public class Answer {
         this.firstCategory = firstCategory ;
         this.secondCategory = secondCategory;
     }
+
     public Answer() {
     }
 
@@ -58,6 +70,7 @@ public class Answer {
         return answerId;
     }
 
+
     public void setAnswerId(long answerId) {
         this.answerId = answerId;
     }
@@ -65,6 +78,7 @@ public class Answer {
     public String getAnswerText() {
         return answerText;
     }
+
 
     public void setAnswerText(String answerText) {
         this.answerText = answerText;
@@ -81,6 +95,7 @@ public class Answer {
     public String getSecondCategory() {
         return secondCategory;
     }
+
     public void setSecondCategory(String secondCategory) {
         this.secondCategory = secondCategory;
     }

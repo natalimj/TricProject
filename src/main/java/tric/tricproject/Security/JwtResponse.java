@@ -2,6 +2,11 @@ package tric.tricproject.Security;
 
 import java.util.List;
 
+/**
+ * @author bezkoder
+ * September,2022
+ * see https://www.bezkoder.com/spring-boot-jwt-authentication/
+ */
 public class JwtResponse {
 	private String token;
 	private String type = "Bearer";

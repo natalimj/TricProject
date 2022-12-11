@@ -1,5 +1,14 @@
 package tric.tricproject.Model;
 
+
+/**
+ * Result class is created as a DTO
+ * to transfer voting result for a question
+ * It holds the question, answers and answer rates
+ *
+ * @author Natali Munk-Jakobsen
+ * @version 1.0, November 2022
+ */
 public class Result {
 
     private Question question;

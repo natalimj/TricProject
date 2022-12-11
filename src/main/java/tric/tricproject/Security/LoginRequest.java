@@ -2,6 +2,11 @@ package tric.tricproject.Security;
 
 import javax.validation.constraints.NotBlank;
 
+/**
+ * @author bezkoder
+ * September,2022
+ * see https://www.bezkoder.com/spring-boot-jwt-authentication/
+ */
 public class LoginRequest {
 	@NotBlank
 	private String username;
