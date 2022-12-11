@@ -1,5 +1,7 @@
 package tric.tricproject.Service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tric.tricproject.Model.User;
@@ -8,6 +10,7 @@ import tric.tricproject.Repository.AnswerRepository;
 import tric.tricproject.Repository.UserRepository;
 import tric.tricproject.Repository.VoteRepository;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +22,7 @@ import static weka.clusterers.HierarchicalClusterer.TAGS_LINK_TYPE;
 
 @Service
 public class PredictionServiceImpl implements PredictionService {
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private HashMap<Long, Integer> userPredictions = new HashMap<>();
 
     @Autowired
@@ -42,14 +46,14 @@ public class PredictionServiceImpl implements PredictionService {
         try {
             Instances dataset = loadForHierarchical(votes, numberOfQuestions);
             HierarchicalClusterer hc = new HierarchicalClusterer();
-            hc.setLinkType(new SelectedTag(4, TAGS_LINK_TYPE));  // CENTROID
+            hc.setLinkType(new SelectedTag(4, TAGS_LINK_TYPE));  // CENTROID LINK
             hc.setNumClusters(2);
             hc.buildClusterer(dataset);
             for (int i = 0; i < dataset.size(); i++) {
                 userPredictions.put(users.get(i).getUserId(), hc.clusterInstance(dataset.get(i)));
             }
         } catch (Exception e) {
-            System.err.println(e);
+            logger.error(e.getMessage());
         }
     }
 
