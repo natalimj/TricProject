@@ -79,11 +79,12 @@ public class PredictionServiceImpl implements PredictionService {
 
     /**
      * @param userId The user id for which the prediction is to be retrieved
-     * @return Returns the prediction generated with the machine learning model or 0 by default.
+     * @return Returns the prediction generated with the machine learning model or uses the manual prediction
+     * if a value was not found.
      */
     @Override
     public int getPredictionForUser(long userId) {
-        return userPredictions.getOrDefault(userId, 0);
+        return userPredictions.getOrDefault(userId, getPredictionForUser(userId));
     }
 
     @Override
@@ -163,6 +164,7 @@ public class PredictionServiceImpl implements PredictionService {
             }
         }
     }
+
     public int getNumberOfQuestions() {
         Long number = questionRepository.count();
         return  number.intValue();
