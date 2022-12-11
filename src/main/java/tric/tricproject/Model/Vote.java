@@ -2,6 +2,15 @@ package tric.tricproject.Model;
 
 import javax.persistence.*;
 
+/**
+ * Vote class holds information about user vote
+ * including userId,questionId and answerId
+ * The class is annotated with @Entity and @Table annotations
+ * in order to map the object with a database table using Spring Data JPA
+ *
+ * @author Natali Munk-Jakobsen
+ * @version 1.0, September 2022
+ */
 @Entity
 @Table(name="vote",schema ="voting")
 public class Vote {

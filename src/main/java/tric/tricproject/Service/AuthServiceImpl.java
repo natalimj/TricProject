@@ -14,6 +14,12 @@ import tric.tricproject.Security.services.UserDetailsImpl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Service implementation class
+ * containing a method to authenticate user
+ *
+ * @version 1.0, October 2022
+ */
 @Service
 public class AuthServiceImpl implements AuthService{
 
@@ -23,6 +29,12 @@ public class AuthServiceImpl implements AuthService{
     @Autowired
     JwtUtils jwtUtils;
 
+    /**
+     * A method to authenticate the admin user and create JWT token
+     *
+     * @param loginRequest the login request holding username and password
+     * @return the jwt response including user details data and JWT
+     */
     @Override
     public JwtResponse authenticateUser(LoginRequest loginRequest) {
 
@@ -41,7 +53,6 @@ public class AuthServiceImpl implements AuthService{
                 userDetails.getId(),
                 userDetails.getUsername(),
                 roles);
-
 
         return jwtResponse;
     }

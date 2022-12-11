@@ -18,12 +18,15 @@ import tric.tricproject.Security.jwt.AuthEntryPointJwt;
 import tric.tricproject.Security.jwt.AuthTokenFilter;
 import tric.tricproject.Security.services.UserDetailsServiceImpl;
 
+/**
+ *
+ * @author bezkoder
+ * September,2022
+ * see https://www.bezkoder.com/spring-boot-jwt-authentication/
+ */
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(
-		// securedEnabled = true,
-		// jsr250Enabled = true,
-		prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
 
 	@Autowired

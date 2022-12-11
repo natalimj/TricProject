@@ -17,6 +17,14 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+
+/**
+ * implements AuthenticationEntryPoint and overrides commence() method
+ *
+ * @author bezkoder
+ * September,2022
+ * see https://www.bezkoder.com/spring-boot-jwt-authentication/
+ */
 @Component
 public class AuthEntryPointJwt implements AuthenticationEntryPoint {
 

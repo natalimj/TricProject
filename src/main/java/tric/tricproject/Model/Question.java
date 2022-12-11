@@ -4,6 +4,14 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Question class holds information about a question including its answers
+ * The class is annotated with @Entity and @Table annotations
+ * in order to map the object with a database table using Spring Data JPA
+ *
+ * @author Natali Munk-Jakobsen
+ * @version 1.0, September 2022
+ */
 @Entity
 @Table(name="question",schema ="voting")
 public class Question {
@@ -30,6 +38,7 @@ public class Question {
         this.questionNumber = questionNumber;
         this.questionText = questionText;
     }
+
     public Question(int questionNumber, String questionText) {
         this.questionNumber = questionNumber;
         this.questionText = questionText;
@@ -43,6 +52,7 @@ public class Question {
         this.theme = theme;
         this.answers = answers;
     }
+
     public Question(long questionId, int questionNumber, String questionText, int time, String theme) {
         this.questionId = questionId;
         this.questionNumber = questionNumber;
@@ -64,6 +74,7 @@ public class Question {
     public Question(String questionText) {
         this.questionText = questionText;
     }
+
     public long getQuestionId() {
         return questionId;
     }

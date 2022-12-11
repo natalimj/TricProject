@@ -4,7 +4,15 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * PlayInfo class holds information about play info
+ * including application status showing current status of the play : active or inactive
+ * The class is annotated with @Entity and @Table annotations
+ * in order to map the object with a database table using Spring Data JPA
+ *
+ * @author Natali Munk-Jakobsen
+ * @version 1.0, September 2022
+ */
 @Entity
 @Table(name="playInfo", schema ="play")
 public class PlayInfo {

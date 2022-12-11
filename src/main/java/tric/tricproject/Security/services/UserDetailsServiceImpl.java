@@ -10,6 +10,12 @@ import org.springframework.transaction.annotation.Transactional;
 import tric.tricproject.Model.Admin;
 import tric.tricproject.Repository.AdminRepository;
 
+/**
+ *
+ * @author bezkoder
+ * September,2022
+ * see https://www.bezkoder.com/spring-boot-jwt-authentication/
+ */
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 	@Autowired AdminRepository adminRepository;
