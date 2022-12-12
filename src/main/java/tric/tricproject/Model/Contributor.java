@@ -11,7 +11,7 @@ import javax.persistence.*;
  * @version 1.0, September 2022
  */
 @Entity
-@Table(name="contributor")
+@Table(name="contributor",schema ="play")
 public class Contributor {
 
     @Id
