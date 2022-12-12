@@ -81,7 +81,7 @@ public class AdminControllerTest {
                 .andExpect(jsonPath("$.questionText").value(question.getQuestionText()))
                 .andExpect(jsonPath("$.answers.size()").value(question.getAnswers().size()))
                 .andExpect(jsonPath("$.answers[0].answerId").value(question.getAnswers().get(0).getAnswerId()))
-                .andExpect(jsonPath("$.answers[0].answerId").value(question.getAnswers().get(1).getAnswerId()))
+                .andExpect(jsonPath("$.answers[1].answerId").value(question.getAnswers().get(1).getAnswerId()))
                 .andDo(print());
 
         given(questionService.getQuestionByNumber(2)).willReturn(null);
