@@ -18,7 +18,6 @@ public interface QuestionService {
     void deleteQuestionById(long questionId);
     List<Question> getAllQuestions();
     Question getQuestionByNumber(int questionNumber);
-    void updateQuestionNumbers();
     Result getResult(long questionId);
     Question addQuestionTime(long questionId, int time);
     String getResultListJson();
