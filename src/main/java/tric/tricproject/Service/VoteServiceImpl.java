@@ -16,11 +16,12 @@ import java.util.List;
  * @version 1.0, October 2022
  */
 @Service
-public class VoteServiceImpl implements VoteService{
+public class VoteServiceImpl implements VoteService {
     @Autowired
     VoteRepository voteRepository;
+
     @Override
-    public Vote  addVote(Vote vote) {
+    public Vote addVote(Vote vote) {
         return voteRepository.save(vote);
     }
 

@@ -70,7 +70,7 @@ public class AdminControllerTest {
         Answer answer2 = new Answer(2,"no",question,"Progressive","Idealist");
         List<Answer> answerList = new ArrayList<>();
         answerList.add(answer1);
-        answerList.add(answer1);
+        answerList.add(answer2);
         question.setAnswers(answerList);
         given(questionService.getQuestionByNumber(1)).willReturn(question);
 

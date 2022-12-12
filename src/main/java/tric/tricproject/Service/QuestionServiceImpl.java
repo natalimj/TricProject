@@ -201,7 +201,7 @@ public class QuestionServiceImpl implements QuestionService {
         return  number.intValue();
     }
 
-    public void updateQuestionNumbers() {
+    private void updateQuestionNumbers() {
         List<Question> questions = questionRepository.findAllByOrderByQuestionIdAsc();
         for (int i = 0; i < questions.size(); i++) {
             questions.get(i).setQuestionNumber(i + 1);
